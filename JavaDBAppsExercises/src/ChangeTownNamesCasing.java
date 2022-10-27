@@ -17,7 +17,7 @@ public class ChangeTownNamesCasing {
     private static final String NO_SUCH_COUNTRY_OR_TOWNS_MESSAGE = "No town names were affected.";
 
     public static void main(String[] args) throws SQLException {
-        Scanner sc = new Scanner(System.in);
+        final Scanner sc = new Scanner(System.in);
 
         String countyName = sc.nextLine();
 
@@ -59,7 +59,7 @@ public class ChangeTownNamesCasing {
             townNames.add(town);
         }
         System.out.println(townNames);
-    connection.close();
+        connection.close();
     }
 }
 

@@ -15,12 +15,11 @@ public class GetVillainsNames {
     private static final String NAME_COLUMN = "name";
     private static final String COUNT_COLUMN = "minions_count";
     private static final String FORMAT = "%s %d";
-    static PreparedStatement preparedStatement;
 
     public static void main(String[] args) throws SQLException {
         final Connection conn = Utils.getSqlConnection();
 
-         preparedStatement = conn.prepareStatement(GET_VILLAINS_NAMES);
+      final PreparedStatement preparedStatement = conn.prepareStatement(GET_VILLAINS_NAMES);
 
         preparedStatement.setInt(1, TARGET_MIN_MINIONS);
 

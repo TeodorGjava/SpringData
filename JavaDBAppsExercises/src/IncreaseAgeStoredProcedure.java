@@ -11,24 +11,24 @@ public class IncreaseAgeStoredProcedure {
     private static final String GET_UPDATED_MINION_INFO_BY_ID = "select name, age from minions where id = ?";
 
     public static void main(String[] args) throws SQLException {
-        Connection connection = Utils.getSqlConnection();
+        final Connection connection = Utils.getSqlConnection();
         int ID = new Scanner(System.in).nextInt();
-        PreparedStatement updateAgeStatement = connection.prepareStatement(UPDATE_MINION_AGE_BY_ID);
+        final PreparedStatement updateAgeStatement = connection.prepareStatement(UPDATE_MINION_AGE_BY_ID);
         updateAgeStatement.setInt(1, ID);
 
         updateAgeStatement.executeUpdate();
 
-        PreparedStatement getInfoStatement = connection.prepareStatement(GET_UPDATED_MINION_INFO_BY_ID);
+        final PreparedStatement getInfoStatement = connection.prepareStatement(GET_UPDATED_MINION_INFO_BY_ID);
 
         getInfoStatement.setInt(1, ID);
 
-        ResultSet minionInfoByID = getInfoStatement.executeQuery();
+        final ResultSet minionInfoByID = getInfoStatement.executeQuery();
 
         if (minionInfoByID.next()) {
             final String name = minionInfoByID.getString(Constants.NAME_COLUMN_LABEL);
             final int age = minionInfoByID.getInt(Constants.AGE_COLUMN_LABEL);
-            System.out.printf("%s %d",name,age);
+            System.out.printf("%s %d", name, age);
         }
-
+        connection.close();
     }
 }

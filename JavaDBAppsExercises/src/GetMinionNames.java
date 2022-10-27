@@ -38,7 +38,7 @@ public class GetMinionNames {
         final PreparedStatement minionsStatement = connection.prepareStatement(GET_MINIONS_NAMES_QUERY);
         minionsStatement.setInt(1, villainID);
 
-        ResultSet minionsResultSet = minionsStatement.executeQuery();
+        final ResultSet minionsResultSet = minionsStatement.executeQuery();
         for (int i = 1; minionsResultSet.next(); i++) {
 
             final String minionName = minionsResultSet.getString(Constants.NAME_COLUMN_LABEL);

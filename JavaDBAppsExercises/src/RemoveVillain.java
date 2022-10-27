@@ -37,8 +37,7 @@ public class RemoveVillain {
         final ResultSet minionsCountResultSet = minionsReleasedPreparedStatement.executeQuery();
         minionsCountResultSet.next();
         final int countReleasedMinions = minionsCountResultSet.getInt(Constants.COUNT_COLUMN_NAME);
-        try (
-                final PreparedStatement deleteMinion = connection.prepareStatement(DELETE_MINIONS_VILLAINS_BY_VILLAIN_ID);
+        try (final PreparedStatement deleteMinion = connection.prepareStatement(DELETE_MINIONS_VILLAINS_BY_VILLAIN_ID);
                 final PreparedStatement deleteVillain = connection.prepareStatement(DELETE_VILLAIN_BY_ID)) {
             connection.setAutoCommit(false);
 
