@@ -9,36 +9,72 @@ import orm.annotations.Id;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static orm.Exceptions.ExceptionMessages.*;
 
 public class EntityManager<E> implements DbContext<E> {
     private final Connection connection;
+
+    private static final String UPDATE_QUERY_BY_ID_FORMAT = "UPDATE %s e SET %s WHERE e.id = %d";
+    private static final String UPDATE_VALUE_FORMAT = "%s = %s";
+    private static final String CREATE_VALUE_FORMAT = "%s %s";
+    private static final String CREATE_TABLE_QUERY_FORMAT = "create table %s (id int primary key auto_increment, %s );";
+    private static final String SELECT_WHERE_FORMAT = "select * from %s %s";
+    private static final String SELECT_WHERE_FIND_FIRST_FORMAT = "select * from %s %s limit 1 ";
+    private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
+    private static final String INT = "INT";
+    private static final String VARCHAR = "VARCHAR(50)";
+    private static final String LOCAL_DATE = "DATE";
 
     public EntityManager(Connection connection) {
         this.connection = connection;
     }
 
+    private List<KeyValuePair> getKeyValuePairs(E entity) {
+        final Class<?> clazz = entity.getClass();
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> !f.isAnnotationPresent(Id.class) && f.isAnnotationPresent(Column.class))
+                .map(f -> new KeyValuePair(f.getAnnotationsByType(Column.class)[0].name(),
+                        mapFieldsToGivenType(f, entity)))
+                .collect(Collectors.toList());
+    }
+
+    private String mapFieldsToGivenType(Field f, E entity) {
+        f.setAccessible(true);
+
+        Object obj = null;
+        try {
+            obj = f.get(entity);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return obj instanceof String || obj instanceof LocalDate
+                ? "'" + obj + "'"
+                : Objects.requireNonNull(obj).toString();
+    }
+
     @Override
     public boolean persist(E entity) throws SQLException, IllegalAccessException {
-        //1. find table name
-        Field primaryKey = Arrays.stream(entity.getClass().getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Id.class))
-                .findFirst().orElseThrow(() -> new ORMException("Entity does not have primary key"));
+        //1. find primaryKey name
+        final Field primaryKey = getIdColumn(entity.getClass());
         primaryKey.setAccessible(true);
-        Object val = primaryKey.get(entity);
-        String query;
+        final Object val = primaryKey.get(entity);
+
         if (val == null || (long) val <= 0) {
-            query = doInsert(entity);
-        } else {
-            query = doUpdate(entity);
+            return doInsert(entity);
         }
-        return this.connection.prepareStatement(query).execute();
+        return doUpdate(entity, primaryKey);
+
+
     }
 
 
@@ -51,7 +87,7 @@ public class EntityManager<E> implements DbContext<E> {
     public Iterable<E> find(Class<E> table, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String tableName = this.getTableName(table);
 
-        String query = String.format("select * from %s %s", tableName,
+        String query = String.format(SELECT_WHERE_FORMAT, tableName,
                 where == null ? ""
                         : "where " + where);
         ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
@@ -75,7 +111,7 @@ public class EntityManager<E> implements DbContext<E> {
     public E findFirst(Class<E> entityType, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         String tableName = this.getTableName(entityType);
 
-        String query = String.format("select * from %s %s limit 1 ", tableName,
+        String query = String.format(SELECT_WHERE_FIND_FIRST_FORMAT, tableName,
                 where == null ? "" : "where " + where);
 
         ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
@@ -87,20 +123,61 @@ public class EntityManager<E> implements DbContext<E> {
         return this.fillEntity(entityType, resultSet);
     }
 
-    public void doCreate(Class<E> entityClass) {
+    @Override
+    public void doCreate(Class<E> entityClass) throws SQLException {
         final String tableName = getTableName(entityClass);
 
-        //getAllFieldsAndTypesInKeyValuePairs(entityClass);
+        final List<KeyValuePair> keyValuePairs = getAllFieldsAndTypesInKeyValuePairs(entityClass);
+
+        final String fieldsWithFormattedTypes = keyValuePairs
+                .stream()
+                .map(keyValuePair -> String.format(CREATE_VALUE_FORMAT, keyValuePair.key, keyValuePair.value))
+                .collect(Collectors.joining(", "));
+
+       final PreparedStatement createTableStatement = connection
+                .prepareStatement(String.format(CREATE_TABLE_QUERY_FORMAT,
+                        tableName,
+                        fieldsWithFormattedTypes));
+        createTableStatement.execute();
+
     }
 
-    //private List<KeyValuePair> getAllFieldsAndTypesInKeyValuePairs(Class<E> entityClass) {
-    //   // getDbFieldsWithoutID(entityClass);
-    //}
+    private List<KeyValuePair> getAllFieldsAndTypesInKeyValuePairs(Class<E> entityClass) {
+        return getDbFieldsWithoutID(entityClass)
+                .stream()
+                .map(field -> new KeyValuePair(getSQLColumnName(field), getSQLType(field.getType())))
+                .toList();
+    }
+
+    private String getSQLType(Class<?> type) {
+        if (type == int.class || type == Integer.class || type == long.class || type == Long.class) {
+            return INT;
+        } else if (type == String.class) {
+            return VARCHAR;
+        } else {
+            return LOCAL_DATE;
+        }
+    }
+
+    private String getSQLColumnName(Field field) {
+        return field.getAnnotationsByType(Column.class)[0].name();
+    }
+
+    // private Object getFieldValue(E entity, Field idName) throws IllegalAccessException {
+    //     idName.setAccessible(true);
+    //     return idName.get(entity);
+    // }
+    private Field getIdColumn(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Id.class))
+                .findFirst()
+                .orElseThrow(() -> new UnsupportedOperationException(NO_ID_MESSAGE));
+    }
 
     private E fillEntity(Class<E> entityType, ResultSet resultSet) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
         E entity = entityType.getDeclaredConstructor().newInstance();
 
-        Field[] declaredFields = entityType.getDeclaredFields();
+        final Field[] declaredFields = entityType.getDeclaredFields();
         for (Field field : declaredFields
         ) {
             if (!field.isAnnotationPresent(Column.class) &&
@@ -130,34 +207,44 @@ public class EntityManager<E> implements DbContext<E> {
         } else if (field.getType() == String.class) {
             field.set(entity, value);
         } else {
-            throw new ORMException("Unsupported type " + field.getType());
+            throw new ORMException(UNSUPPORTED_TYPE + field.getType());
         }
 
     }
 
-    private String doUpdate(E entity) throws IllegalAccessException {
-        String tableName = this.getTableName(entity.getClass());
+    private boolean doUpdate(E entity, Field idColumn) throws IllegalAccessException, SQLException {
+        final String tableName = this.getTableName(entity.getClass());
         //2. get db fields
-        String fieldList = this.getDbFieldsWithoutID(entity);
+        final List<KeyValuePair> keyValuePairList = this.getKeyValuePairs(entity);
         // //3. get insert Values
-        String valueList = this.getValuesWithoutId(entity);
+        final String updateValues = keyValuePairList.stream()
+                .map(KeyValuePair -> String.format(UPDATE_VALUE_FORMAT, KeyValuePair.key, KeyValuePair.value))
+                .collect(Collectors.joining(", "));
 
-        return String.format("update %s set (%s) = (%s)", tableName, fieldList, valueList);
+        final int idValue = Integer.parseInt(idColumn.get(entity).toString());
+
+        final String updateQuery = String.format(UPDATE_QUERY_BY_ID_FORMAT, tableName, updateValues, idValue);
+        return connection.prepareStatement(updateQuery).execute();
     }
 
-    private String doInsert(E entity) throws IllegalAccessException {
-        String tableName = this.getTableName(entity.getClass());
+    private boolean doInsert(E entity) throws IllegalAccessException, SQLException {
+        final String tableName = this.getTableName(entity.getClass());
         //2. get db fields
-        String fieldList = this.getDbFieldsWithoutID(entity);
-        // //3. get insert Values
-        String valueList = this.getValuesWithoutId(entity);
+        final List<KeyValuePair> keyValuePairs = getKeyValuePairs(entity);
 
-        return String.format("INSERT INTO %s (%s) VALUES (%s)", tableName, fieldList, valueList);
+        final String fieldList = keyValuePairs.stream()
+                .map(KeyValuePair::key).collect(Collectors.joining(","));
+        // //3. get insert Values
+        final String valueList = keyValuePairs.stream()
+                .map(KeyValuePair::value).collect(Collectors.joining(","));
+        final String insertQuery = String.format(INSERT_QUERY_FORMAT, tableName, fieldList, valueList);
+        return connection.prepareStatement(insertQuery).execute();
+
     }
 
     private String getValuesWithoutId(E entity) throws IllegalAccessException {
-        Field[] declaredFields = entity.getClass().getDeclaredFields();
-        List<String> result = new ArrayList<>();
+        final Field[] declaredFields = entity.getClass().getDeclaredFields();
+        final List<String> result = new ArrayList<>();
         for (Field field : declaredFields) {
             if (field.getAnnotation(Column.class) == null) {
                 continue;
@@ -170,12 +257,11 @@ public class EntityManager<E> implements DbContext<E> {
         return String.join(",", result);
     }
 
-    private String getDbFieldsWithoutID(E entity) {
-        return Arrays.stream(
-                        entity.getClass().getDeclaredFields())
-                .filter(f -> f.getAnnotation(Column.class) != null)
-                .map(f -> f.getAnnotation(Column.class).name())
-                .collect(Collectors.joining(", "));
+    private List<Field> getDbFieldsWithoutID(Class<E> entity) {
+        return Arrays.stream(entity.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Column.class) && !f.isAnnotationPresent(Id.class))
+                .toList();
+
     }
 
 
@@ -183,7 +269,7 @@ public class EntityManager<E> implements DbContext<E> {
         Entity annotation = entity.getAnnotation(Entity.class);
         //if no such annotation
         if (annotation == null) {
-            throw new ORMException("Provided class does not have Entity annotation");
+            throw new ORMException(NO_ENTITY_EXCEPTION);
         }
         return annotation.name();
     }
