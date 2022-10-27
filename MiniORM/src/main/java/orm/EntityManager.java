@@ -1,4 +1,5 @@
 package orm;
+//https://discord.gg/kXCuZHqk !! discord groUP SPRING DATA
 
 import orm.Exceptions.ORMException;
 import orm.annotations.Column;
@@ -38,6 +39,100 @@ public class EntityManager<E> implements DbContext<E> {
             query = doUpdate(entity);
         }
         return this.connection.prepareStatement(query).execute();
+    }
+
+
+    @Override
+    public Iterable<E> find(Class<E> table) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return find(table, null);
+    }
+
+    @Override
+    public Iterable<E> find(Class<E> table, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String tableName = this.getTableName(table);
+
+        String query = String.format("select * from %s %s", tableName,
+                where == null ? ""
+                        : "where " + where);
+        ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
+
+        List<E> result = new ArrayList<>();
+
+        E lastResult = this.fillEntity(table, resultSet);
+        while (lastResult != null) {
+            result.add(lastResult);
+            lastResult = this.fillEntity(table, resultSet);
+        }
+        return result;
+    }
+
+    @Override
+    public E findFirst(Class<E> entityType) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return findFirst(entityType, null);
+    }
+
+    @Override
+    public E findFirst(Class<E> entityType, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String tableName = this.getTableName(entityType);
+
+        String query = String.format("select * from %s %s limit 1 ", tableName,
+                where == null ? "" : "where " + where);
+
+        ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
+
+        if (!resultSet.next()) {
+            return null;
+        }
+
+        return this.fillEntity(entityType, resultSet);
+    }
+
+    public void doCreate(Class<E> entityClass) {
+        final String tableName = getTableName(entityClass);
+
+        //getAllFieldsAndTypesInKeyValuePairs(entityClass);
+    }
+
+    //private List<KeyValuePair> getAllFieldsAndTypesInKeyValuePairs(Class<E> entityClass) {
+    //   // getDbFieldsWithoutID(entityClass);
+    //}
+
+    private E fillEntity(Class<E> entityType, ResultSet resultSet) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
+        E entity = entityType.getDeclaredConstructor().newInstance();
+
+        Field[] declaredFields = entityType.getDeclaredFields();
+        for (Field field : declaredFields
+        ) {
+            if (!field.isAnnotationPresent(Column.class) &&
+                    !field.isAnnotationPresent(Id.class)) {
+                continue;
+            }
+            Column columnAnnotation = field.getAnnotation(Column.class);
+
+            final String fieldName = columnAnnotation == null ? field.getName()
+                    : columnAnnotation.name();
+
+            final String value = resultSet.getString(fieldName);
+            this.fillData(entity, field, value);
+        }
+        return entity;
+    }
+
+    private void fillData(E entity, Field field, String value) throws IllegalAccessException {
+        field.setAccessible(true);
+
+        if (field.getType() == long.class || field.getType() == Long.class) {
+            field.setLong(entity, Long.parseLong(value));
+        } else if (field.getType() == int.class || field.getType() == Integer.class) {
+            field.setInt(entity, Integer.parseInt(value));
+        } else if (field.getType() == LocalDate.class) {
+            field.set(entity, LocalDate.parse(value));
+        } else if (field.getType() == String.class) {
+            field.set(entity, value);
+        } else {
+            throw new ORMException("Unsupported type " + field.getType());
+        }
+
     }
 
     private String doUpdate(E entity) throws IllegalAccessException {
@@ -93,86 +188,6 @@ public class EntityManager<E> implements DbContext<E> {
         return annotation.name();
     }
 
-    @Override
-    public Iterable<E> find(Class<E> table) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        return find(table, null);
-    }
-
-    @Override
-    public Iterable<E> find(Class<E> table, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String tableName = this.getTableName(table);
-
-        String query = String.format("select * from %s %s", tableName,
-                where == null ? ""
-                        : "where " + where);
-        ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
-
-        List<E> result = new ArrayList<>();
-
-        E lastResult = this.fillEntity(table, resultSet);
-        while (lastResult != null) {
-            result.add(lastResult);
-            lastResult = this.fillEntity(table, resultSet);
-        }
-        return result;
-    }
-
-    @Override
-    public E findFirst(Class<E> entityType) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        return findFirst(entityType, null);
-    }
-
-    @Override
-    public E findFirst(Class<E> entityType, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String tableName = this.getTableName(entityType);
-
-        String query = String.format("select * from %s %s limit 1 ", tableName,
-                where == null ? "" : "where " + where);
-
-        ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
-
-        if (!resultSet.next()) {
-            return null;
-        }
-
-        return this.fillEntity(entityType, resultSet);
-    }
-
-    private E fillEntity(Class<E> entityType, ResultSet resultSet) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException, SQLException {
-        E entity = entityType.getDeclaredConstructor().newInstance();
-
-        Field[] declaredFields = entityType.getDeclaredFields();
-        for (Field field : declaredFields
-        ) {
-            if (!field.isAnnotationPresent(Column.class) &&
-                    !field.isAnnotationPresent(Id.class)) {
-                continue;
-            }
-            Column columnAnnotation = field.getAnnotation(Column.class);
-
-            final String fieldName = columnAnnotation == null ? field.getName()
-                    : columnAnnotation.name();
-
-            final String value = resultSet.getString(fieldName);
-            this.fillData(entity, field, value);
-        }
-        return entity;
-    }
-
-    private void fillData(E entity, Field field, String value) throws IllegalAccessException {
-        field.setAccessible(true);
-
-        if (field.getType() == long.class || field.getType() == Long.class) {
-            field.setLong(entity, Long.parseLong(value));
-        } else if (field.getType() == int.class || field.getType() == Integer.class) {
-            field.setInt(entity, Integer.parseInt(value));
-        } else if (field.getType() == LocalDate.class) {
-            field.set(entity, LocalDate.parse(value));
-        } else if (field.getType() == String.class) {
-            field.set(entity, value);
-        } else {
-            throw new ORMException("Unsupported type " + field.getType());
-        }
-
+    private record KeyValuePair(String key, String value) {
     }
 }

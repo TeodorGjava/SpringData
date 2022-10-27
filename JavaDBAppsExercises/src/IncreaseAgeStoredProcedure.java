@@ -1,7 +1,4 @@
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Scanner;
 
 
@@ -13,10 +10,10 @@ public class IncreaseAgeStoredProcedure {
     public static void main(String[] args) throws SQLException {
         final Connection connection = Utils.getSqlConnection();
         int ID = new Scanner(System.in).nextInt();
-        final PreparedStatement updateAgeStatement = connection.prepareStatement(UPDATE_MINION_AGE_BY_ID);
-        updateAgeStatement.setInt(1, ID);
+        final CallableStatement getOlderProcedure = connection.prepareCall(UPDATE_MINION_AGE_BY_ID);
+        getOlderProcedure.setInt(1, ID);
 
-        updateAgeStatement.executeUpdate();
+        getOlderProcedure.execute();
 
         final PreparedStatement getInfoStatement = connection.prepareStatement(GET_UPDATED_MINION_INFO_BY_ID);
 
