@@ -13,10 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static orm.Exceptions.ExceptionMessages.*;
@@ -121,6 +118,21 @@ public class EntityManager<E> implements DbContext<E> {
         }
 
         return this.fillEntity(entityType, resultSet);
+    }
+
+    @Override
+    public void doAlter(Class<E> entity) {
+        final String tableName = getTableName(entity);
+        
+        String addColumnStatement = addColumnsStatementNewFields(entity,tableName);
+    }
+
+    private String addColumnsStatementNewFields(Class<E> entity, String tableName) {
+        Set<String> sqlCols = getSQLColumnName(entity,tableName);
+    }
+
+    private Set<String> getSQLColumnName(Class<E> entity, String tableName) {
+
     }
 
     @Override

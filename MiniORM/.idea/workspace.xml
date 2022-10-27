@@ -99,7 +99,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/main/java/orm/EntityManager.java</url>
-          <line>136</line>
+          <line>148</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
       </breakpoints>
