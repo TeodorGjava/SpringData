@@ -25,9 +25,14 @@ public class EntityManager<E> implements DbContext<E> {
     private static final String UPDATE_VALUE_FORMAT = "%s = %s";
     private static final String CREATE_VALUE_FORMAT = "%s %s";
     private static final String CREATE_TABLE_QUERY_FORMAT = "create table %s (id int primary key auto_increment, %s );";
+    private static final String ADD_COLUMN_QUERY_FORMAT = "ADD COLUMN %s %s";
+    private static final String DELETE_QUERY_FORMAT = "DELETE FROM %s WHERE %s = %s";
+    private static final String ALTER_TABLE_QUERY_FORMAT = "ALTER TABLE %s %s";
     private static final String SELECT_WHERE_FORMAT = "select * from %s %s";
     private static final String SELECT_WHERE_FIND_FIRST_FORMAT = "select * from %s %s limit 1 ";
     private static final String INSERT_QUERY_FORMAT = "INSERT INTO %s (%s) VALUES (%s)";
+    private static final String GET_ALL_COLUMNS_NAMES_BY_TABLE_NAME = "select `column_name` from `information_schema`.`columns` " +
+            "where `table_schema`='soft_uni' and `column_name` != 'id' and `table_name` = ?";
     private static final String INT = "INT";
     private static final String VARCHAR = "VARCHAR(50)";
     private static final String LOCAL_DATE = "DATE";
@@ -82,12 +87,12 @@ public class EntityManager<E> implements DbContext<E> {
 
     @Override
     public Iterable<E> find(Class<E> table, String where) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String tableName = this.getTableName(table);
+        final String tableName = this.getTableName(table);
 
-        String query = String.format(SELECT_WHERE_FORMAT, tableName,
+        final String query = String.format(SELECT_WHERE_FORMAT, tableName,
                 where == null ? ""
                         : "where " + where);
-        ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
+        final ResultSet resultSet = this.connection.prepareStatement(query).executeQuery();
 
         List<E> result = new ArrayList<>();
 
@@ -121,18 +126,69 @@ public class EntityManager<E> implements DbContext<E> {
     }
 
     @Override
-    public void doAlter(Class<E> entity) {
+    public void doAlter(Class<E> entity) throws SQLException {
         final String tableName = getTableName(entity);
-        
-        String addColumnStatement = addColumnsStatementNewFields(entity,tableName);
+        final String currentFields = addColumnsStatementNewFields(entity, tableName);
+
+        String alterQuery = String.format(ALTER_TABLE_QUERY_FORMAT, tableName, currentFields);
+
+        final PreparedStatement alterStatement = connection.prepareStatement(alterQuery);
+
+        alterStatement.execute();
     }
 
-    private String addColumnsStatementNewFields(Class<E> entity, String tableName) {
-        Set<String> sqlCols = getSQLColumnName(entity,tableName);
+    public void doDelete(E entity) throws SQLException, IllegalAccessException {
+        final String tableName = getTableName(entity.getClass());
+
+        final Field idField = getIdColumn(entity.getClass());
+
+        final String idName = getSQLColumnName(idField);
+
+        final Object idValue = getFieldValue(entity, idField);
+
+        PreparedStatement deleteStatement = connection.prepareStatement(String.format(DELETE_QUERY_FORMAT, tableName, idName, idValue));
+
+        deleteStatement.execute();
     }
 
-    private Set<String> getSQLColumnName(Class<E> entity, String tableName) {
+    private Object getFieldValue(E entity, Field idField) throws IllegalAccessException {
+        idField.setAccessible(true);
+        return idField.get(entity);
+    }
 
+    private String addColumnsStatementNewFields(Class<E> entity, String tableName) throws SQLException {
+        final Set<String> sqlCols = getSQLColumnNames(tableName);
+        final List<Field> dbFieldsWithoutID = getDbFieldsWithoutID(entity);
+
+        List<String> allNewFields = new ArrayList<>();
+        for (Field field : dbFieldsWithoutID
+        ) {
+            final String fieldName = getSQLColumnName(field);
+
+            if (sqlCols.contains(fieldName)) {
+                continue;
+            }
+            final String sqlType = getSQLType(field.getType());
+
+            final String addStatement = String.format(ADD_COLUMN_QUERY_FORMAT, fieldName, sqlType);
+            allNewFields.add(addStatement);
+        }
+        return String.join(", ", allNewFields);
+
+    }
+
+    private Set<String> getSQLColumnNames(String tableName) throws SQLException {
+        Set<String> allFields = new HashSet<>();
+
+        final PreparedStatement getAllFields = connection.prepareStatement(GET_ALL_COLUMNS_NAMES_BY_TABLE_NAME);
+        getAllFields.setString(1, tableName);
+
+        ResultSet resultSet = getAllFields.executeQuery();
+
+        while (resultSet.next()) {
+            allFields.add(resultSet.getString(1));
+        }
+        return allFields;
     }
 
     @Override
@@ -146,7 +202,7 @@ public class EntityManager<E> implements DbContext<E> {
                 .map(keyValuePair -> String.format(CREATE_VALUE_FORMAT, keyValuePair.key, keyValuePair.value))
                 .collect(Collectors.joining(", "));
 
-       final PreparedStatement createTableStatement = connection
+        final PreparedStatement createTableStatement = connection
                 .prepareStatement(String.format(CREATE_TABLE_QUERY_FORMAT,
                         tableName,
                         fieldsWithFormattedTypes));
@@ -175,10 +231,7 @@ public class EntityManager<E> implements DbContext<E> {
         return field.getAnnotationsByType(Column.class)[0].name();
     }
 
-    // private Object getFieldValue(E entity, Field idName) throws IllegalAccessException {
-    //     idName.setAccessible(true);
-    //     return idName.get(entity);
-    // }
+
     private Field getIdColumn(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Id.class))
@@ -239,7 +292,7 @@ public class EntityManager<E> implements DbContext<E> {
         return connection.prepareStatement(updateQuery).execute();
     }
 
-    private boolean doInsert(E entity) throws IllegalAccessException, SQLException {
+    private boolean doInsert(E entity) throws SQLException {
         final String tableName = this.getTableName(entity.getClass());
         //2. get db fields
         final List<KeyValuePair> keyValuePairs = getKeyValuePairs(entity);
@@ -254,20 +307,6 @@ public class EntityManager<E> implements DbContext<E> {
 
     }
 
-    private String getValuesWithoutId(E entity) throws IllegalAccessException {
-        final Field[] declaredFields = entity.getClass().getDeclaredFields();
-        final List<String> result = new ArrayList<>();
-        for (Field field : declaredFields) {
-            if (field.getAnnotation(Column.class) == null) {
-                continue;
-            }
-
-            field.setAccessible(true);
-            Object val = field.get(entity);
-            result.add("\"" + val.toString() + "\"");
-        }
-        return String.join(",", result);
-    }
 
     private List<Field> getDbFieldsWithoutID(Class<E> entity) {
         return Arrays.stream(entity.getDeclaredFields())

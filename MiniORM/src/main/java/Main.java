@@ -33,10 +33,8 @@ public class Main {
         //userEntityManager
         //        .find(User.class, "age>17 and registration_date > 2021-12-12")
         //        .forEach(user -> System.out.println(user.toString()));
-        EntityManager<Account> accountEntityManager = new EntityManager<>(connection);
-
-       //accountEntityManager.doCreate(Account.class);
-        Account account = new Account("Teodor",LocalDate.now(),24);
-        accountEntityManager.persist(account);
+        User user = new User();
+        user.setId(2L);
+        userEntityManager.doDelete(user);
     }
 }

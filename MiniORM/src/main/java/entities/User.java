@@ -8,7 +8,8 @@ import java.time.LocalDate;
 
 @Entity(name = "users")
 public class User {
-    @Id(name = "id")
+    @Id
+    @Column(name = "id")
     private long id;
 @Column(name="user_name")
     private String username;

@@ -6,7 +6,8 @@ import orm.annotations.Id;
 
 @Entity(name = "students")
 public class Student {
-    @Id(name = "id")
+    @Id
+    @Column(name = "id")
     private int id;
     @Column(name = "name")
     private String name;

@@ -8,7 +8,8 @@ import java.time.LocalDate;
 
 @Entity(name = "accounts")
 public class Account {
-    @Id(name = "id")
+    @Id
+    @Column(name = "id")
     private long id;
     @Column(name = "name")
     private String name;
@@ -16,23 +17,35 @@ public class Account {
     private LocalDate created_on;
     @Column(name = "age")
     private Integer age;
+    @Column(name = "nickname")
+    private String nickname;
 
     public Account() {
     }
 
-    public Account(String name, LocalDate created_on, Integer age) {
+    public Account(String name, LocalDate created_on, Integer age, String nickname) {
         this.name = name;
         this.created_on = created_on;
         this.age = age;
+        this.nickname = nickname;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
