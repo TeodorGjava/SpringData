@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c462ecb3-e3c5-4087-af8e-48530f6037f3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/Student.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/orm/DbContext.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/orm/DbContext.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/orm/EntityManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/orm/EntityManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/orm/annotations/Id.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/orm/annotations/Id.java" afterDir="false" />
-    </list>
+    <list default="true" id="c462ecb3-e3c5-4087-af8e-48530f6037f3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,7 +78,7 @@
       <workItem from="1666716582135" duration="6276000" />
       <workItem from="1666802862083" duration="17000" />
       <workItem from="1666804370464" duration="3883000" />
-      <workItem from="1667032870478" duration="5480000" />
+      <workItem from="1667032870478" duration="6476000" />
     </task>
     <servers />
   </component>
