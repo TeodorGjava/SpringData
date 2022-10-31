@@ -11,13 +11,13 @@ public class GetEmployeeWithProject {
     public static void main(String[] args) {
         final int id = new Scanner(System.in).nextInt();
 
-        EntityManager entityManager = dbConfig.getEntityManager();
+        final EntityManager entityManager = dbConfig.getEntityManager();
         entityManager.getTransaction().begin();
         Employee employee = entityManager.createQuery(SELECT_QUERY, Employee.class)
                 .setParameter("id", id)
                 .getSingleResult();
 
-        System.out.printf("%s %s %s%n%n", employee.getFirstName()
+        System.out.printf("%s %s %s%n", employee.getFirstName()
                 , employee.getLastName(), employee.getDepartment().getName());
 
         List<Project> toSort = new ArrayList<>(employee.getProjects());
