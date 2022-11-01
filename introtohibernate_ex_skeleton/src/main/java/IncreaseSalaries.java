@@ -2,8 +2,7 @@ import entities.Employee;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
+
 
 public class IncreaseSalaries {
 
