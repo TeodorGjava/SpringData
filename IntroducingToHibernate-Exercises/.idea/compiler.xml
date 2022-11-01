@@ -10,5 +10,8 @@
         <module name="introtohibernate_ex_skeleton" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="introtohibernate_ex_skeleton" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
