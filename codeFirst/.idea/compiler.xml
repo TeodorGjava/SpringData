@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="WizardDeposit" />
         <module name="FootballBetting" />
+        <module name="HospitalDB" />
         <module name="University" />
         <module name="SalesDatabase" />
       </profile>
