@@ -13,6 +13,7 @@
         <module>FootballDatabase</module>
         <module>FootballBetting</module>
         <module>SalesDatabase</module>
+        <module>University</module>
     </modules>
 
     <properties>
