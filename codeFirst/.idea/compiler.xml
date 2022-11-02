@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="WizardDeposit" />
         <module name="FootballBetting" />
+        <module name="SalesDatabase" />
       </profile>
     </annotationProcessing>
   </component>

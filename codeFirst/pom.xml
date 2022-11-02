@@ -12,6 +12,7 @@
         <module>WizardDeposit</module>
         <module>FootballDatabase</module>
         <module>FootballBetting</module>
+        <module>SalesDatabase</module>
     </modules>
 
     <properties>
