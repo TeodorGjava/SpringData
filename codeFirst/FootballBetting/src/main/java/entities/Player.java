@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "players")
 public class Player extends BaseEntity {
     @Column(nullable = false)
     private String name;

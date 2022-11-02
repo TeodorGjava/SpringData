@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table
+@Table(name = "colors")
 public class Color extends BaseEntity {
     @Column
     private String name;

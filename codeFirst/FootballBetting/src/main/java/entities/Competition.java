@@ -13,12 +13,12 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "towns")
-public class Town extends BaseEntity{
-
-    @Column(nullable = false)
+@Table(name = "competitions")
+public class Competition extends BaseEntity {
+    @Column
     private String name;
-
     @ManyToOne
-    private Country country;
+    private CompetitionType type;
+
+
 }
