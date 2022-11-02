@@ -10,11 +10,12 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>WizardDeposit</module>
-        <module>FootballDatabase</module>
+        <module>FootballBetting</module>
         <module>FootballBetting</module>
         <module>SalesDatabase</module>
         <module>University</module>
         <module>HospitalDB</module>
+        <module>BillsPaymentSystem</module>
     </modules>
 
     <properties>

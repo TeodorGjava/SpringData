@@ -9,10 +9,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="WizardDeposit" />
         <module name="FootballBetting" />
-        <module name="HospitalDB" />
-        <module name="University" />
-        <module name="SalesDatabase" />
+        <module name="BillsPaymentSystem" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="HospitalDB" target="17" />
+      <module name="SalesDatabase" target="17" />
+      <module name="University" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
