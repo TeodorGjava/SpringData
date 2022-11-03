@@ -5,20 +5,28 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 import java.util.List;
+import java.util.Locale;
 
 public class ChangeCasing {
-    private static final String dbName = "soft_uni";
-   // private static final String UPDATE_TOWNS_WITH_LENGTH_MORE_THAN_5 =
-   //         "update Town t set t.name = upper(t.name) where length(t.name) > 5";
+
+    private static final String UPDATE_TOWNS_WITH_LENGTH_MORE_THAN_5 =
+            "update Town t set t.name = upper(t.name) where length(t.name) > 5";
 
     public static void main(String[] args) {
-        EntityManagerFactory entityManagerFactory =
-                Persistence.createEntityManagerFactory(dbName);
 
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        EntityManager entityManager = dbConfig.getEntityManager();
         entityManager.getTransaction().begin();
-        Query upperTowns = entityManager.createQuery("select t from Town t",Town.class);
-        upperTowns.executeUpdate();
+        //query update way
+        entityManager.createQuery(UPDATE_TOWNS_WITH_LENGTH_MORE_THAN_5, Town.class).executeUpdate();
+        //Setter update way
+        List<Town> towns = entityManager.createQuery("select t from Town t", Town.class).getResultList();
+        for (Town town : towns) {
+            final String name = town.getName();
+            if (5 >= name.length()) {
+                town.setName(name.toUpperCase());
+                entityManager.persist(town);
+            }
+        }
 
         entityManager.getTransaction().commit();
         entityManager.close();

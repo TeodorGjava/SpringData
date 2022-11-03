@@ -5,6 +5,8 @@ import java.util.Scanner;
 
 public class AddingNewAddressUpdatingEmployee {
     private static final String ADDRESS = "Vitoshka 15";
+    private static final String UPDATE_QUERY = "update Employee e set e.address = :newAddress" +
+            " where e.lastName = :ln";
 
     public static void main(String[] args) {
         final EntityManager entityManager = dbConfig.getEntityManager();
@@ -17,14 +19,15 @@ public class AddingNewAddressUpdatingEmployee {
 
         entityManager.persist(address);
 
-        final int i = entityManager.createQuery("update Employee e set e.address = :newAddress" +
-                        " where e.lastName = :ln")
+        final int i = entityManager.createQuery(UPDATE_QUERY)
                 .setParameter("newAddress", address)
                 .setParameter("ln", lastName)
                 .executeUpdate();
-
-        entityManager.getTransaction().commit();
-        entityManager.close();
+        if(i>0) {
+            entityManager.getTransaction().commit();
+        }else{
+            entityManager.getTransaction().rollback();
+        }entityManager.close();
 
         System.out.println(i);
     }
