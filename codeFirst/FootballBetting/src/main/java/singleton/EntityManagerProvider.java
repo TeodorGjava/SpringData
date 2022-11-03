@@ -4,17 +4,18 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-public class EntityManagerVol2 {
+public class EntityManagerProvider {
     private static EntityManager entityManager = null;
 
 
-    private EntityManagerVol2() {
+    private EntityManagerProvider() {
     }
 
     public static EntityManager getManager(String persistenceUnitName) {
         if (entityManager == null) {
             entityManager =
-                    Persistence.createEntityManagerFactory(persistenceUnitName).createEntityManager();
+                    Persistence.createEntityManagerFactory(persistenceUnitName)
+                            .createEntityManager();
         }
         return entityManager;
     }
