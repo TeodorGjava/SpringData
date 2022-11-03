@@ -10,6 +10,9 @@
         <module name="WizardDeposit" />
         <module name="FootballBetting" />
         <module name="BillsPaymentSystem" />
+        <module name="HospitalDB" />
+        <module name="University" />
+        <module name="SalesDatabase" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
