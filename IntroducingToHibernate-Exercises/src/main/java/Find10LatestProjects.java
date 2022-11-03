@@ -10,7 +10,7 @@ public class Find10LatestProjects {
         EntityManager entityManager = dbConfig.getEntityManager();
 
         entityManager.getTransaction().begin();
-        List<Project> projects = entityManager.createQuery("select p from Project p order by p.startDate desc", Project.class).getResultList();
+       final List<Project> projects = entityManager.createQuery("select p from Project p order by p.startDate desc", Project.class).getResultList();
 
         for (int i = 0; i <10 ; i++) {
             System.out.printf("Project name %s%n" +
