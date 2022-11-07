@@ -39,7 +39,7 @@ public class Wizard {
 
     @OneToMany
     @JoinTable(
-            name = "wizard_deposits",
+            name = "deposits",
             joinColumns = @JoinColumn(name = "id"),
             inverseJoinColumns = @JoinColumn(name = "deposit_id")
     )
