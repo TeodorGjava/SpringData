@@ -1,6 +1,6 @@
 package com.softuni.springbootintroexercises;
 
-import com.softuni.springbootintroexercises.domain.entities.Book;
+
 import com.softuni.springbootintroexercises.domain.services.author.AuthorService;
 import com.softuni.springbootintroexercises.domain.services.book.BookService;
 import com.softuni.springbootintroexercises.domain.services.seed.SeedService;
