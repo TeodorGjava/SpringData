@@ -10,5 +10,5 @@ public interface BookService {
     List<Book> findAllByReleaseDateAfter(LocalDate date);
 
 
-    List<Book> findAllByFirstNameLastName(String firstName, String lastName);
+    List<Book> findAllByAuthorFirstNameAndAuthorLastNameOrderByReleaseDateDescTitleAsc(String firstName, String lastName);
 }

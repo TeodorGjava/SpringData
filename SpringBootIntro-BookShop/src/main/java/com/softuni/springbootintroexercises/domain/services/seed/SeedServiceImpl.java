@@ -83,7 +83,8 @@ public class SeedServiceImpl implements SeedService {
             this.categoryService.seedCategories(Files.readAllLines(
                             Path.of(URL_FOLDER + CATEGORY_FILE_NAME)).stream()
                     .filter(s -> !s.isBlank())
-                    .map(name -> Category.builder().name(name).build()).collect(Collectors.toList()));
+                    .map(name -> Category.builder().name(name).build())
+                    .collect(Collectors.toList()));
         }
     }
 

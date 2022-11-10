@@ -33,8 +33,8 @@ public class AuthorServiceImpl implements AuthorService {
     public Author getRandomAuthor() {
         long count = this.authorRepository.count();
         if (count != 0) {
-            long randomAuthorId = new Random().nextLong(1L, count) + 1;
-            return this.authorRepository.findAuthorById(randomAuthorId).orElseThrow(NoSuchElementException::new);
+            long randomId = new Random().nextLong(1L, count) + 1;
+            return this.authorRepository.findAuthorById(randomId).orElseThrow(NoSuchElementException::new);
         }
         throw new RuntimeException("Error");
     }
@@ -46,8 +46,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> findAllOrderByBooks() {
-        //return this.authorRepository.getAll().orElseThrow(NoSuchElementException::new);
-                //.stream().sorted(author -> author.getBooks().size());
-        return null;
+        return this.authorRepository.
+                findAllDistinctOrderByBooks().orElseThrow(NoSuchElementException::new);
     }
 }

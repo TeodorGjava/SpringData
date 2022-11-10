@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Set<Category> getRandomCategories() {
         long count = this.categoryRepository.count();
         if (count != 0) {
-            long randomAuthorId = new Random().nextLong(1L, count);
+            long randomAuthorId = new Random().nextLong(1L, count) + 1L;
             return Set.of(this.categoryRepository.findById(randomAuthorId).orElseThrow(NoSuchElementException::new));
         }
         throw new RuntimeException("Error");
