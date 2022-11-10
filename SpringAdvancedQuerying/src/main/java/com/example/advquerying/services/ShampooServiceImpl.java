@@ -23,14 +23,24 @@ public class ShampooServiceImpl implements ShampooService {
     }
 
     @Override
-    public List<Shampoo> findShampooBySizeOrderByIdDesc(Size size) {
-        return this.shampooRepository.findShampooBySizeOrderById(size);
+    public List<Shampoo> findShampooBySizeOrderByIdDesc(String size) {
+        return this.shampooRepository.findShampooBySizeOrderById(Size.valueOf(size.toUpperCase()));
     }
 
     @Override
     public List<Shampoo> findShampooByBrandAndSize(String brand, String size) {
         return shampooRepository.findShampooByBrandAndSize(brand, Size.valueOf(size.toUpperCase()));
 
+    }
+
+    @Override
+    public List<Shampoo> findShampooBySize(String size) {
+        return shampooRepository.findShampooBySize(Size.valueOf(size.toUpperCase()));
+    }
+
+    @Override
+    public List<Shampoo> findByIngredient(String name) {
+        return shampooRepository.findByIngredient(name);
     }
 
 

@@ -24,7 +24,12 @@ public class Main implements CommandLineRunner {
             for (Shampoo shampoo1 : shampooService.findShampooByBrandAndSize("Volume & Fullness Lavender", "medium")) {
                 shampoo1.toString();
             }
+            shampooService.findShampooBySize("medium").forEach(System.out::println);
+            shampooService.findShampooBySizeOrderByIdDesc("MEDIUM").forEach(System.out::println);
+
+            shampooService.findByIngredient("Berry").forEach(shampoo1 -> System.out.println(1));
         }
+
 
     }
 }
