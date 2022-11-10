@@ -5,6 +5,7 @@ import com.example.advquerying.entities.Size;
 import com.example.advquerying.repositories.ShampooRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,14 +19,19 @@ public class ShampooServiceImpl implements ShampooService {
 
     @Override
     public List<Shampoo> findByBrand(String brand) {
-        return shampooRepository.findAll()
-                .stream()
-                .filter(x -> x.getBrand().equals(brand))
-                .collect(Collectors.toList());
+        return new ArrayList<>(shampooRepository.findByBrand(brand));
     }
 
     @Override
-    public List<Shampoo> findShampooBySizeOrderById(Size size) {
+    public List<Shampoo> findShampooBySizeOrderByIdDesc(Size size) {
         return this.shampooRepository.findShampooBySizeOrderById(size);
     }
+
+    @Override
+    public List<Shampoo> findShampooByBrandAndSize(String brand, String size) {
+        return shampooRepository.findShampooByBrandAndSize(brand, Size.valueOf(size.toUpperCase()));
+
+    }
+
+
 }
