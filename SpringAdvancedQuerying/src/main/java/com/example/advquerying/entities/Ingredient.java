@@ -1,4 +1,5 @@
 package com.example.advquerying.entities;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Set;
@@ -12,6 +13,11 @@ public class Ingredient extends BaseEntity {
     private Set<Shampoo> shampoos;
 
     public Ingredient() {
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s", getName(), getPrice());
     }
 
     @Column(name = "name")

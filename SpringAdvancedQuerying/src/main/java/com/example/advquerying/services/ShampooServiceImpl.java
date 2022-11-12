@@ -5,6 +5,7 @@ import com.example.advquerying.entities.Size;
 import com.example.advquerying.repositories.ShampooRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +42,22 @@ public class ShampooServiceImpl implements ShampooService {
     @Override
     public List<Shampoo> findByIngredient(String name) {
         return shampooRepository.findByIngredient(name);
+    }
+
+    @Override
+    public List<Shampoo> selectShampoosWithIngredientsCount(int count) {
+        return shampooRepository.selectShampoosWithIngredientsCount(count);
+    }
+
+    @Override
+    public List<Shampoo> findAllByPriceLessThan(String price) {
+        BigDecimal parsedDecimal = new BigDecimal(price);
+        return new ArrayList<>(shampooRepository.findAllByPriceLessThan(parsedDecimal));
+    }
+
+    @Override
+    public List<Shampoo> findShampooBySizeOrLabelOrderByPrice(String size, Long id) {
+        return shampooRepository.findShampooBySizeOrLabelIdOrderByPrice(Size.valueOf(size.toUpperCase()), id);
     }
 
 
