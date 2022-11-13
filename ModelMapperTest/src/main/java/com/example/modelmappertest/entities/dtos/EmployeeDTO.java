@@ -1,5 +1,6 @@
 package com.example.modelmappertest.entities.dtos;
 
+import com.example.modelmappertest.entities.Address;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,13 +11,40 @@ import java.math.BigDecimal;
 public class EmployeeDTO {
     private String firstName;
     private BigDecimal salary;
-    private String addressCity;
+    private String city;
+    private Address address;
 
     public EmployeeDTO() {
     }
 
     @Override
     public String toString() {
-        return String.format("%s %.2f %s %n", firstName, salary, addressCity);
+        return String
+                .format("First name: %s %Salary: %.2f City:%s %n",
+                        firstName, salary, city);
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public BigDecimal getSalary() {
+        return salary;
+    }
+
+    public void setSalary(BigDecimal salary) {
+        this.salary = salary;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
