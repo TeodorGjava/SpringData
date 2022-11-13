@@ -20,8 +20,8 @@ public class EmployeeDTO {
     @Override
     public String toString() {
         return String
-                .format("First name: %s %Salary: %.2f City:%s %n",
-                        firstName, salary, city);
+                .format("First name: %s Salary: %.2f City:%s %n",
+                        this.firstName, this.salary, this.address.getCity());
     }
 
     public String getFirstName() {

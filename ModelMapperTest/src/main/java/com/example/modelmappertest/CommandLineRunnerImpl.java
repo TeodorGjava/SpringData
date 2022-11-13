@@ -3,7 +3,6 @@ package com.example.modelmappertest;
 import com.example.modelmappertest.entities.Address;
 import com.example.modelmappertest.entities.dtos.AddressDTO;
 import com.example.modelmappertest.entities.dtos.CreateEmployeeDTO;
-import com.example.modelmappertest.entities.dtos.EmployeeDTO;
 import com.example.modelmappertest.services.AddressService;
 import com.example.modelmappertest.services.EmployeeService;
 import org.springframework.boot.CommandLineRunner;
@@ -15,45 +14,51 @@ import java.util.Scanner;
 
 @Component
 public class CommandLineRunnerImpl implements CommandLineRunner {
-    AddressService addressService;
-    EmployeeService employeeService;
+    private final AddressService addressService;
+    private final EmployeeService employeeService;
 
-    public CommandLineRunnerImpl(AddressService addressService, EmployeeService employeeService) {
+    private final Scanner sc;
+
+    public CommandLineRunnerImpl(AddressService addressService, EmployeeService employeeService, Scanner sc) {
         this.addressService = addressService;
         this.employeeService = employeeService;
+        this.sc = sc;
     }
 
     @Override
     public void run(String... args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        createAddress(sc);
-
-        createEmployee(sc);
-
+        //createAddress();
+        //createEmployee();
+       // printAllEmployees();
+        this.employeeService.findNameCityAndSalaryById(1L);
     }
 
-    private void createEmployee(Scanner sc) {
+    private void printAllEmployees() {
+        this.employeeService.findAll().forEach(System.out::println);
+    }
+
+    private void createEmployee() {
         String firstName = sc.nextLine();
         BigDecimal salary = new BigDecimal(sc.nextLine());
         LocalDate birthday = LocalDate.parse(sc.nextLine());
-       // long addressId = Long.parseLong(sc.nextLine());
+        // long addressId = Long.parseLong(sc.nextLine());
         String country = sc.nextLine();
         String city = sc.nextLine();
 
-        AddressDTO address = new AddressDTO(country,city);
+        AddressDTO address = new AddressDTO(country, city);
 
         CreateEmployeeDTO employeeDTO =
                 new CreateEmployeeDTO(firstName, null, salary, birthday, address);
         this.employeeService.create(employeeDTO);
     }
 
-    private void createAddress(Scanner sc) {
+    private void createAddress() {
         String country = sc.nextLine();
         String city = sc.nextLine();
 
         AddressDTO data = new AddressDTO(country, city);
         Address address = addressService.create(data);
-       this.addressService.create(data);
+        this.addressService.create(data);
         System.out.println(address);
     }
 /*
