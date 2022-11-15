@@ -13,7 +13,7 @@ public class GetEmployeeWithProject {
 
         final EntityManager entityManager = dbConfig.getEntityManager();
         entityManager.getTransaction().begin();
-        Employee employee = entityManager.createQuery(SELECT_QUERY, Employee.class)
+        final Employee employee = entityManager.createQuery(SELECT_QUERY, Employee.class)
                 .setParameter("id", id)
                 .getSingleResult();
 

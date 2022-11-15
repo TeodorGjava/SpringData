@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "bank_account")
 public class BankAccount extends BillingDetail {
-    @Column
+    @Column(name = "bank_name")
     private String bankName;
     @Column
     private String SWIFTcode;

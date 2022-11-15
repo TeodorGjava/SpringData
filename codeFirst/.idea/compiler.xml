@@ -15,10 +15,5 @@
         <module name="SalesDatabase" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="HospitalDB" target="17" />
-      <module name="SalesDatabase" target="17" />
-      <module name="University" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
