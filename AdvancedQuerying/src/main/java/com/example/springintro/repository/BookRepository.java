@@ -6,6 +6,7 @@ import com.example.springintro.model.entity.EditionType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -47,4 +48,11 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query(value = "update Book b set b.copies= b.copies + :copies where b.releaseDate >:date")
     @Modifying
     Optional<Integer> increaseBookCopiesAfterGivenDate(LocalDate date, Integer copies);
+
+    @Transactional
+    @Modifying
+    Optional<Integer> deleteBooksByCopiesLessThan(Integer copies);
+
+
+
 }

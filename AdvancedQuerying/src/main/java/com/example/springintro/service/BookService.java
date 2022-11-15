@@ -37,4 +37,5 @@ public interface BookService {
     List<String> findByTitle(String title);
 
     Optional<Integer> increaseBookCopiesAfterGivenDate(LocalDate date, Integer copies);
+    Integer deleteBooksByCopiesLessThan(Integer copies);
 }

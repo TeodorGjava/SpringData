@@ -134,8 +134,13 @@ public class BookServiceImpl implements BookService {
     @Override
     public Optional<Integer> increaseBookCopiesAfterGivenDate(LocalDate date, Integer copies) {
         Optional<Integer> books = this.bookRepository.increaseBookCopiesAfterGivenDate(date, copies);
-        System.out.println(books);
+
         return books;
+    }
+
+    @Override
+    public Integer deleteBooksByCopiesLessThan(Integer copies) {
+        return this.bookRepository.deleteBooksByCopiesLessThan(copies).orElseThrow(NoSuchElementException::new);
     }
 
     @Override
