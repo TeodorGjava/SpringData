@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d572f4f-3040-4f70-b7b9-3729b3c52d1f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/introtohibernate_ex_skeleton/.idea/workspace.xml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/IntroducingToHibernate-Exercises/src/main/java/AddressesWithEmployeeCount.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/codeFirst/BillsPaymentSystem/src/main/java/SnapshotArray.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IntroducingToHibernate-Exercises/src/main/java/AddingNewAddressUpdatingEmployee.java" beforeDir="false" afterPath="$PROJECT_DIR$/IntroducingToHibernate-Exercises/src/main/java/AddingNewAddressUpdatingEmployee.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +28,15 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/codeFirst" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
     <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\User\Documents\GitHub\SpringData\IntroducingToHibernate-Exercises\src\main\java" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -37,5 +48,16 @@
       <updated>1667202308087</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

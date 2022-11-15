@@ -4,7 +4,8 @@ import javax.persistence.Persistence;
 import java.util.Scanner;
 
 public class ContainsEmployee {
-
+    private static final String QUERY = "select count(e) from Employee e " +
+            "where e.firstName =:fn and e.lastName= :ln";
 
     public static void main(String[] args) {
         EntityManager entityManager = dbConfig.getEntityManager();
@@ -13,14 +14,13 @@ public class ContainsEmployee {
         String firstName = name[0];
         String lastName = name[1];
         entityManager.getTransaction().begin();
-        Long matches = entityManager.createQuery("select count(e) from Employee e " +
-                                                    "where e.firstName =:fn and e.lastName= :ln", Long.class)
+        Long matches = entityManager.createQuery(QUERY, Long.class)
                 .setParameter("fn", firstName)
                 .setParameter("ln", lastName)
                 .getSingleResult();
-        if(matches==0){
+        if (matches == 0) {
             System.out.println("No");
-        }else{
+        } else {
             System.out.println("Yes");
         }
 

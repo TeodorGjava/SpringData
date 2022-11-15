@@ -7,6 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -37,6 +39,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String loginUser(String[] input) {
-return null;
+        final String email = input[1];
+        final String password = input[2];
+
+        final Optional<User> byEmail = this.userRepository.findByEmail(email);
+        if (byEmail.isPresent() && byEmail.get().getPassword().equals(password)) {
+            //TODO: login User impl if there is user with this email && password is correct for this user account
+
+        }
+
+        return null;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        return this.userRepository.findByEmail(email).orElseThrow(NoSuchFieldError::new);
     }
 }

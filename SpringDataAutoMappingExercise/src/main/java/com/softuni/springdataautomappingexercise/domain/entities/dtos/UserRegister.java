@@ -32,7 +32,7 @@ public class UserRegister {
             throw new IllegalArgumentException(INVALID_PASSWORD_MESSAGE);
         }
         if(!password.equals(confirmPassword)){
-            throw new IllegalArgumentException(PASSWORDS_DONT_MATCH_MESSAGES);
+            throw new IllegalArgumentException(PASSWORDS_DO_NOT_MATCH_MESSAGE);
         }
 
     }
