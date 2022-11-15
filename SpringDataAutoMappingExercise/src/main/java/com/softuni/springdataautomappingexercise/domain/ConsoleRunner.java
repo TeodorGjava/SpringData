@@ -28,7 +28,7 @@ public class ConsoleRunner implements CommandLineRunner {
         final String output = switch (command) {
             case REGISTER_USER -> userService.registerUser(input);
             case LOGIN_USER -> userService.loginUser(input);
-            default -> System.out.println(COMMAND_NOT_FOUND_MESSAGE);
-        }
+            default -> COMMAND_NOT_FOUND_MESSAGE;
+        };
     }
 }
