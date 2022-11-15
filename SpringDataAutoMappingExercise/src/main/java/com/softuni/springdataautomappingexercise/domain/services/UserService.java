@@ -9,4 +9,6 @@ public interface UserService {
 
     String loginUser(String[] input);
     User findByEmail(String email);
+
+    String logoutUser();
 }

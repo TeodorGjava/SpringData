@@ -16,15 +16,25 @@ public class User extends BaseEntity {
     private String email;
     @Column(nullable = false)
     private String password;
-    @Column(name = "full_name", nullable = false)
+    @Column(name = "full_name", nullable = false, unique = true)
     private String fullName;
     @ManyToMany(fetch = FetchType.EAGER, cascade = {
             CascadeType.DETACH, CascadeType.MERGE})
     private Set<Game> games;
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private Set<Order> orders;
     @Column(nullable = false)
     private Boolean isAdministrator;
+    private Boolean isOnline;
+
+    public Boolean getOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(Boolean online) {
+        isOnline = online;
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -96,6 +106,10 @@ public class User extends BaseEntity {
 
     public Boolean getAdministrator() {
         return isAdministrator;
+    }
+
+    public String successfulLogin() {
+        return String.format("Successfully logged in %s", this.fullName);
     }
 
     public void setAdministrator(Boolean administrator) {
