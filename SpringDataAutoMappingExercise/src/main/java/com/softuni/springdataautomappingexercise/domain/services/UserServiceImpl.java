@@ -53,6 +53,8 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findByFullName(fullName).orElseThrow(NoSuchElementException::new);
     }
 
+
+
     @Override
     public String loginUser(String[] input) {
         final String email = input[1];

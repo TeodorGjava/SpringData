@@ -59,7 +59,9 @@ public class GameServiceImpl implements GameService {
             return "Invalid parameter to edit";
         }
     }
-
+    public void addGame(String title){
+        Game game = gameRepository.findGameByTitle(title);
+    }
     @Override
     public String deleteGameById(String id) {
 
@@ -70,6 +72,11 @@ public class GameServiceImpl implements GameService {
             return "Deleted " + game.get().getTitle();
         }
         return "No such game to delete";
+    }
+
+    @Override
+    public Game findByTitle(String title) {
+        return this.gameRepository.findGameByTitle(title);
     }
 
     private boolean validate(String[] data) {

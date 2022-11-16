@@ -15,4 +15,5 @@ public interface GameRepository extends JpaRepository<Game, Long> {
     @Transactional
     @Modifying
     String deleteGameById(Long id);
+    Game findGameByTitle(String title);
 }

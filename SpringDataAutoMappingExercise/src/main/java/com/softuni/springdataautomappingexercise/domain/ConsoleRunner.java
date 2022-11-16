@@ -16,7 +16,8 @@ public class ConsoleRunner implements CommandLineRunner {
     private static final Scanner sc = new Scanner(System.in);
     private final UserService userService;
     private final GameService gameService;
-    private  User user = null;
+    private User user = null;
+
     public ConsoleRunner(UserService userService, GameService gameService) {
         this.userService = userService;
         this.gameService = gameService;
@@ -39,7 +40,8 @@ public class ConsoleRunner implements CommandLineRunner {
                 case REGISTER_USER -> this.userService.registerUser(data);
                 case LOGIN_USER -> this.userService.loginUser(data);
                 case LOGOUT -> this.userService.logoutUser();
-                case ADD_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.addGame(data) : "User not online or not Administrator";
+                case ADD_GAME -> this.user.getOnline() ? this.user.getAdministrator() ? this.gameService.addGame(data) : "User not online" :
+                        this.user.addGame(this.gameService.findByTitle(data[1])) + " " + this.user.getFullName();
                 case EDIT_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.editGame(data) : "User not online or not Administrator";
                 case DELETE_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.deleteGameById(data[1]) : "User not online or not Administrator";
                 default -> COMMAND_NOT_FOUND_MESSAGE;

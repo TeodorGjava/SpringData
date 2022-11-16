@@ -65,6 +65,11 @@ public class User extends BaseEntity {
 
     }
 
+    public String addGame(Game game) {
+        this.games.add(game);
+        return game.getTitle() + " added to user";
+    }
+
     public String getEmail() {
         return email;
     }
