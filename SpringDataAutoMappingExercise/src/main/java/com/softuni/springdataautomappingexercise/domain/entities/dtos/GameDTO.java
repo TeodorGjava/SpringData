@@ -1,30 +1,30 @@
-package com.softuni.springdataautomappingexercise.domain.entities;
+package com.softuni.springdataautomappingexercise.domain.entities.dtos;
+
+import com.softuni.springdataautomappingexercise.domain.entities.Game;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "games")
-public class Game extends BaseEntity {
-    @Column(nullable = false)
+public class GameDTO {
+
     private String title;
-    @Column(name = "trailer_id")
+
     private String trailerId;
-    @Column(name = "image_url")
+
     private String imageURL;
-    @Column
+
     private BigDecimal size;
-    @Column
+
     private BigDecimal price;
-    @Column
+
     private String description;
-    @Column(name = "release_date", nullable = false)
+
     private LocalDate releaseDate;
 
-    public Game() {
+    public Game toGame() {
+        return new Game(title, trailerId, imageURL, size, price, description, releaseDate
+        );
     }
 
     public String getTitle() {
@@ -83,7 +83,7 @@ public class Game extends BaseEntity {
         this.releaseDate = releaseDate;
     }
 
-    public Game(String title, String trailerId, String imageURL, BigDecimal size, BigDecimal price, String description, LocalDate releaseDate) {
+    public GameDTO(String title, String trailerId, String imageURL, BigDecimal size, BigDecimal price, String description, LocalDate releaseDate) {
         this.title = title;
         this.trailerId = trailerId;
         this.imageURL = imageURL;

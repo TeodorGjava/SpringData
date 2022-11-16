@@ -8,6 +8,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 import static com.softuni.springdataautomappingexercise.domain.constants.Validations.INVALID_PASSWORD_MESSAGE;
 import static com.softuni.springdataautomappingexercise.domain.constants.Validations.NO_USER_LOGGED_IN_MESSAGE;
 import static java.lang.String.format;
@@ -49,6 +51,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByFullName(String fullName) {
+        return this.userRepository.findByFullName(fullName).orElseThrow(NoSuchElementException::new);
+    }
+
+
+    @Override
     public String loginUser(String[] input) {
         final String email = input[1];
         final String password = input[2];
@@ -71,10 +79,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String logoutUser() {
-
         if (this.user.getOnline()) {
             this.user.setOnline(false);
-            return String.format("User " + this.user.getFullName() + " logged out");
+            final String output = "User " + this.user.getFullName() + " logged out";
+            this.user = null;
+            return output;
         }
         return NO_USER_LOGGED_IN_MESSAGE;
     }
