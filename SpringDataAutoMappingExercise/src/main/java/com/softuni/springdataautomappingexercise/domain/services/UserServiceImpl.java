@@ -37,6 +37,8 @@ public class UserServiceImpl implements UserService {
 
         if (this.userRepository.count() == 0) {
             user.setAdministrator(true);
+        }else{
+            user.setAdministrator(false);
         }
         boolean isRegistered = this.userRepository.findFirstByEmail(userRegisterDTO.getEmail()).isPresent();
         if (isRegistered) {
