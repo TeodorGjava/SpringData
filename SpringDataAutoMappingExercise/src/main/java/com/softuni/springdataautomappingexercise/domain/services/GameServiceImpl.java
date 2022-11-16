@@ -1,6 +1,7 @@
 package com.softuni.springdataautomappingexercise.domain.services;
 
 import com.softuni.springdataautomappingexercise.domain.entities.Game;
+import com.softuni.springdataautomappingexercise.domain.entities.dtos.GameDTO;
 import com.softuni.springdataautomappingexercise.domain.repositories.GameRepository;
 
 import java.math.BigDecimal;
@@ -23,11 +24,11 @@ public class GameServiceImpl implements GameService {
         int month = Integer.parseInt(date[1]);
         int day = Integer.parseInt(date[0]);
         if (validate(data)) {
-            Game game = new Game(data[0], data[4],
+            GameDTO game = new GameDTO(data[0], data[4],
                     data[5], new BigDecimal(data[3]),
                     new BigDecimal(data[2]), data[6],
                     LocalDate.of(year, month, day));
-            this.gameRepository.save(game);
+            this.gameRepository.save(game.toGame());
             return "Added " + data[1];
         }
         return "Game parameters are not valid!";
@@ -59,9 +60,12 @@ public class GameServiceImpl implements GameService {
             return "Invalid parameter to edit";
         }
     }
-    public void addGame(String title){
+
+    public void addGame(String title) {
         Game game = gameRepository.findGameByTitle(title);
+        this.gameRepository.save(game);
     }
+
     @Override
     public String deleteGameById(String id) {
 
@@ -86,7 +90,7 @@ public class GameServiceImpl implements GameService {
         String trailer = data[4];
         String thumbnailURL = data[5];
         String description = data[6];
-        final boolean isTitleValid = title.length() >= 3 && title.length() <= 100;
+        final boolean isTitleValid = title.length() >= 3 && title.length() <= 100 && Character.isUpperCase(title.charAt(0));
         final boolean pricePositive = price > 0;
         final boolean sizePositive = size > 0;
         final boolean validTrailer = trailer.matches("^(https?://?www\\.youtube\\.com/watch\\?v=)[a-zA-Z]{11}");

@@ -54,7 +54,6 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public String loginUser(String[] input) {
         final String email = input[1];
@@ -78,10 +77,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String logoutUser() {
-
         if (this.user.getOnline()) {
             this.user.setOnline(false);
-            return "User " + this.user.getFullName() + " logged out";
+            final String output = "User " + this.user.getFullName() + " logged out";
+            this.user = null;
+            return output;
         }
         return NO_USER_LOGGED_IN_MESSAGE;
     }

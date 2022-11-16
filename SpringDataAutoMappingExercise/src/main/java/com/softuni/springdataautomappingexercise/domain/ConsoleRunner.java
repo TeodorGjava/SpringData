@@ -40,10 +40,16 @@ public class ConsoleRunner implements CommandLineRunner {
                 case REGISTER_USER -> this.userService.registerUser(data);
                 case LOGIN_USER -> this.userService.loginUser(data);
                 case LOGOUT -> this.userService.logoutUser();
-                case ADD_GAME -> this.user.getOnline() ? this.user.getAdministrator() ? this.gameService.addGame(data) : "User not online" :
-                        this.user.addGame(this.gameService.findByTitle(data[1])) + " " + this.user.getFullName();
-                case EDIT_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.editGame(data) : "User not online or not Administrator";
-                case DELETE_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.deleteGameById(data[1]) : "User not online or not Administrator";
+                case ADD_GAME -> this.user.getOnline() ?
+                        this.user.getAdministrator() ?
+                                this.gameService.addGame(data) : "User not online" :
+                        this.user.addGame(this.gameService.findByTitle(data[1])) + " "
+                                + this.user.getFullName();
+                case EDIT_GAME -> this.user.getOnline() && this.user.getAdministrator()
+                        ? this.gameService.editGame(data) : "User not online or not Administrator";
+                case DELETE_GAME -> this.user.getOnline() && this.user.getAdministrator()
+                        ? this.gameService.deleteGameById(data[1])
+                        : "User not online or not Administrator";
                 default -> COMMAND_NOT_FOUND_MESSAGE;
             };
             if (output.startsWith("Successfully logged in ")) {
