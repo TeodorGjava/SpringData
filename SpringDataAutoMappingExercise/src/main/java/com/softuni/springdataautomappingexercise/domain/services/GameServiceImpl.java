@@ -46,10 +46,30 @@ public class GameServiceImpl implements GameService {
                 String[] updateValues = data[i].split("=");
                 String field = updateValues[0];
                 String newValue = updateValues[1];
-
+                switch (field) {
+                    case "price" -> game.get().setPrice(new BigDecimal(newValue));
+                    case "title" -> game.get().setTitle(newValue);
+                    case "size" -> game.get().setSize(new BigDecimal(newValue));
+                    case "trailer" -> game.get().setTrailerId(newValue);
+                    case "description" -> game.get().setDescription(newValue);
+                }
             }
+            return "Edited " + game.get().getTitle();
+        } else {
+            return "Invalid parameter to edit";
         }
-        return null;
+    }
+
+    @Override
+    public String deleteGameById(String id) {
+
+        long parsedId = Long.parseLong(id);
+        final Optional<Game> game = this.gameRepository.findById(parsedId);
+        if (game.isPresent()) {
+            this.gameRepository.delete(game.get());
+            return "Deleted " + game.get().getTitle();
+        }
+        return "No such game to delete";
     }
 
     private boolean validate(String[] data) {

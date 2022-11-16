@@ -8,4 +8,5 @@ public enum Commands {
 
     public static final String ADD_GAME = "AddGame";
     public static final String EDIT_GAME = "EditGame";
+    public static final String DELETE_GAME = "DeleteGame";
 }

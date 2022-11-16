@@ -16,7 +16,7 @@ public class ConsoleRunner implements CommandLineRunner {
     private static final Scanner sc = new Scanner(System.in);
     private final UserService userService;
     private final GameService gameService;
-
+    private  User user = null;
     public ConsoleRunner(UserService userService, GameService gameService) {
         this.userService = userService;
         this.gameService = gameService;
@@ -33,15 +33,21 @@ public class ConsoleRunner implements CommandLineRunner {
         while (!input.equals("end")) {
             final String[] data = input.split("[|]");
             final String command = data[0];
+
+
             final String output = switch (command) {
-                case REGISTER_USER -> userService.registerUser(data);
-                case LOGIN_USER -> userService.loginUser(data);
-                case LOGOUT -> userService.logoutUser();
-                case ADD_GAME -> gameService.addGame(data);
-                case EDIT_GAME -> gameService.editGame(data);
+                case REGISTER_USER -> this.userService.registerUser(data);
+                case LOGIN_USER -> this.userService.loginUser(data);
+                case LOGOUT -> this.userService.logoutUser();
+                case ADD_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.addGame(data) : "User not online or not Administrator";
+                case EDIT_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.editGame(data) : "User not online or not Administrator";
+                case DELETE_GAME -> this.user.getOnline() && this.user.getAdministrator() ? this.gameService.deleteGameById(data[1]) : "User not online or not Administrator";
                 default -> COMMAND_NOT_FOUND_MESSAGE;
             };
-            System.out.println(output);
+            if (output.startsWith("Successfully logged in ")) {
+                final String userName = output.substring(22);
+                this.user = this.userService.findByFullName(userName);
+            }
             input = sc.nextLine();
         }
     }

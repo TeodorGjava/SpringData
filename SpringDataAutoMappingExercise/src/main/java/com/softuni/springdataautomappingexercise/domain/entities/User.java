@@ -25,16 +25,17 @@ public class User extends BaseEntity {
     private Set<Order> orders;
     @Column(nullable = false)
     private Boolean isAdministrator;
+    @Column
     private Boolean isOnline;
 
-    public Boolean getOnline() {
-        return isOnline;
-    }
 
     public void setOnline(Boolean online) {
         isOnline = online;
     }
 
+    public Boolean getOnline() {
+        return isOnline;
+    }
 
     @Override
     public boolean equals(Object o) {
