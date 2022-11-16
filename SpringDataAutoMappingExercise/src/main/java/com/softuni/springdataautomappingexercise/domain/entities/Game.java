@@ -16,7 +16,7 @@ public class Game extends BaseEntity {
     @Column(name = "image_url")
     private String imageURL;
     @Column
-    private Float size;
+    private BigDecimal size;
     @Column
     private BigDecimal price;
     @Column
@@ -51,11 +51,11 @@ public class Game extends BaseEntity {
         this.imageURL = imageURL;
     }
 
-    public Float getSize() {
+    public BigDecimal getSize() {
         return size;
     }
 
-    public void setSize(Float size) {
+    public void setSize(BigDecimal size) {
         this.size = size;
     }
 
@@ -83,7 +83,7 @@ public class Game extends BaseEntity {
         this.releaseDate = releaseDate;
     }
 
-    public Game(String title, String trailerId, String imageURL, Float size, BigDecimal price, String description, LocalDate releaseDate) {
+    public Game(String title, String trailerId, String imageURL, BigDecimal size, BigDecimal price, String description, LocalDate releaseDate) {
         this.title = title;
         this.trailerId = trailerId;
         this.imageURL = imageURL;
