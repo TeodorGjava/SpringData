@@ -54,7 +54,7 @@ public class ConsoleRunner implements CommandLineRunner {
             };
             if (output.startsWith("Successfully logged in ")) {
                 final String userName = output.substring(22);
-                this.user = this.userService.findByFullName(userName);
+                this.user = this.userService.findUserByFullName(userName);
             }
             input = sc.nextLine();
         }

@@ -42,7 +42,7 @@ public class UserRegisterDTO {
     }
 
     public void setEmail(String email) {
-        if (Pattern.matches(EMAIL_PATTERN, this.email)) {
+        if (Pattern.matches(EMAIL_PATTERN, email)) {
             this.email = email;
         }else{
             System.out.println(INVALID_EMAIL_MESSAGE);

@@ -51,8 +51,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByFullName(String fullName) {
-        return this.userRepository.findByFullName(fullName).orElseThrow(NoSuchElementException::new);
+    public User findUserByFullName(String fullName) {
+        return this.userRepository.findUserByFullName(fullName).orElseThrow(NoSuchElementException::new);
     }
 
 
