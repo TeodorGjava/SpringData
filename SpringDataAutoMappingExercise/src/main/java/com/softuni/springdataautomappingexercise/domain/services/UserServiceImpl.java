@@ -37,16 +37,14 @@ public class UserServiceImpl implements UserService {
 
         User user = this.mapper.map(userRegisterDTO, User.class);
 
-        if (this.userRepository.count() == 0) {
-            user.setAdministrator(true);
-        }else{
-            user.setAdministrator(false);
-        }
+        user.setAdministrator(this.userRepository.count() == 0);
+
         boolean isRegistered = this.userRepository.findFirstByEmail(userRegisterDTO.getEmail()).isPresent();
         if (isRegistered) {
             return "User with this email already exists.";
         }
         this.userRepository.save(user);
+        System.out.println("User " + user.getFullName() + " successfully registered");
         return userRegisterDTO.successfulRegister();
     }
 
@@ -81,9 +79,7 @@ public class UserServiceImpl implements UserService {
     public String logoutUser() {
         if (this.user.getOnline()) {
             this.user.setOnline(false);
-            final String output = "User " + this.user.getFullName() + " logged out";
-            this.user = null;
-            return output;
+            return "User " + this.user.getFullName() + " logged out";
         }
         return NO_USER_LOGGED_IN_MESSAGE;
     }

@@ -4,6 +4,7 @@ import com.softuni.springdataautomappingexercise.domain.entities.Game;
 import com.softuni.springdataautomappingexercise.domain.entities.dtos.GameDTO;
 import com.softuni.springdataautomappingexercise.domain.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

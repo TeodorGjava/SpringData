@@ -4,22 +4,16 @@ import com.softuni.springdataautomappingexercise.domain.entities.Game;
 
 import javax.persistence.Column;
 import java.math.BigDecimal;
+import java.sql.Struct;
 import java.time.LocalDate;
 
 public class GameDTO {
-
     private String title;
-
     private String trailerId;
-
     private String imageURL;
-
     private BigDecimal size;
-
     private BigDecimal price;
-
     private String description;
-
     private LocalDate releaseDate;
 
     public Game toGame() {
@@ -27,12 +21,16 @@ public class GameDTO {
         );
     }
 
+
     public String getTitle() {
         return title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        if (title.length() >= 3 && title.length() <= 100 && Character.isUpperCase(title.charAt(0))) {
+            this.title = title;
+        }
+        throw new IllegalArgumentException("Invalid game title");
     }
 
     public String getTrailerId() {
@@ -40,7 +38,11 @@ public class GameDTO {
     }
 
     public void setTrailerId(String trailerId) {
-        this.trailerId = trailerId;
+        boolean matches = trailerId.matches("^(https?://?www\\.youtube\\.com/watch\\?v=)[a-zA-Z]{11}");
+        if (matches) {
+            this.trailerId = trailerId;
+        }
+        throw new IllegalArgumentException("Invalid trailerId");
     }
 
     public String getImageURL() {
@@ -48,7 +50,10 @@ public class GameDTO {
     }
 
     public void setImageURL(String imageURL) {
-        this.imageURL = imageURL;
+        if (imageURL.startsWith("http://") && imageURL.startsWith("https://")) {
+            this.imageURL = imageURL;
+        }
+        throw new IllegalArgumentException("Image URL invalid");
     }
 
     public BigDecimal getSize() {
@@ -56,7 +61,10 @@ public class GameDTO {
     }
 
     public void setSize(BigDecimal size) {
-        this.size = size;
+        if (size.compareTo(new BigDecimal(0)) < 1) {
+            this.size = size;
+        }
+        throw new IllegalArgumentException("Invalid game size");
     }
 
     public BigDecimal getPrice() {
@@ -64,14 +72,21 @@ public class GameDTO {
     }
 
     public void setPrice(BigDecimal price) {
-        this.price = price;
+        if (price.compareTo(new BigDecimal(0)) < 1) {
+            this.price = price;
+        }
+        throw new IllegalArgumentException("Invalid game price");
     }
 
     public String getDescription() {
+
         return description;
     }
 
     public void setDescription(String description) {
+        if (description.length() < 20) {
+            throw new IllegalArgumentException("Description must be at least 20 symbols long.");
+        }
         this.description = description;
     }
 
@@ -84,12 +99,12 @@ public class GameDTO {
     }
 
     public GameDTO(String title, String trailerId, String imageURL, BigDecimal size, BigDecimal price, String description, LocalDate releaseDate) {
-        this.title = title;
-        this.trailerId = trailerId;
-        this.imageURL = imageURL;
-        this.size = size;
-        this.price = price;
-        this.description = description;
-        this.releaseDate = releaseDate;
+        setTitle(title);
+        setTrailerId(trailerId);
+        setImageURL(imageURL);
+        setSize(size);
+        setPrice(price);
+        setDescription(description);
+        setReleaseDate(releaseDate);
     }
 }

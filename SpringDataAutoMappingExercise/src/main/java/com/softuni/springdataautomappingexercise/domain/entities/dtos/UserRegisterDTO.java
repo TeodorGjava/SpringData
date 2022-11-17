@@ -12,6 +12,7 @@ public class UserRegisterDTO {
     private String confirmPassword;
     private String fullName;
 
+    //TODO: validate thru setters not void method
     public UserRegisterDTO(String email, String password, String confirmPassword, String fullName) {
         setEmail(email);
         this.password = password;
@@ -44,7 +45,7 @@ public class UserRegisterDTO {
     public void setEmail(String email) {
         if (Pattern.matches(EMAIL_PATTERN, email)) {
             this.email = email;
-        }else{
+        } else {
             System.out.println(INVALID_EMAIL_MESSAGE);
         }
     }
