@@ -3,6 +3,7 @@ package com.softuni.springdataautomappingexercise.domain;
 import com.softuni.springdataautomappingexercise.domain.entities.User;
 import com.softuni.springdataautomappingexercise.domain.services.GameService;
 import com.softuni.springdataautomappingexercise.domain.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class ConsoleRunner implements CommandLineRunner {
     private final UserService userService;
     private final GameService gameService;
     private User user = null;
-
+@Autowired
     public ConsoleRunner(UserService userService, GameService gameService) {
         this.userService = userService;
         this.gameService = gameService;
@@ -52,10 +53,11 @@ public class ConsoleRunner implements CommandLineRunner {
                         : "User not online or not Administrator";
                 default -> COMMAND_NOT_FOUND_MESSAGE;
             };
-            if (output.startsWith("Successfully logged in ")) {
-                final String userName = output.substring(22);
-                this.user = this.userService.findByFullName(userName);
-            }
+            //if (output.startsWith("User ")) {
+           //     final String userName = output.substring(22);
+           //     this.user = this.userService.findByFullName(userName);
+           // }
+            System.out.println(output);
             input = sc.nextLine();
         }
     }

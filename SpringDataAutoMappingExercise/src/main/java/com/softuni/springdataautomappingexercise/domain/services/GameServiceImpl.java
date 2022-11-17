@@ -3,12 +3,14 @@ package com.softuni.springdataautomappingexercise.domain.services;
 import com.softuni.springdataautomappingexercise.domain.entities.Game;
 import com.softuni.springdataautomappingexercise.domain.entities.dtos.GameDTO;
 import com.softuni.springdataautomappingexercise.domain.repositories.GameRepository;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@Service
 public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
 

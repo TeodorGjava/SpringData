@@ -44,6 +44,7 @@ public class UserServiceImpl implements UserService {
             return "User with this email already exists.";
         }
         this.userRepository.save(user);
+        System.out.println("User " + user.getFullName() + " successfully registered");
         return userRegisterDTO.successfulRegister();
     }
 
@@ -78,9 +79,7 @@ public class UserServiceImpl implements UserService {
     public String logoutUser() {
         if (this.user.getOnline()) {
             this.user.setOnline(false);
-            final String output = "User " + this.user.getFullName() + " logged out";
-            this.user = null;
-            return output;
+            return "User " + this.user.getFullName() + " logged out";
         }
         return NO_USER_LOGGED_IN_MESSAGE;
     }
