@@ -37,11 +37,8 @@ public class UserServiceImpl implements UserService {
 
         User user = this.mapper.map(userRegisterDTO, User.class);
 
-        if (this.userRepository.count() == 0) {
-            user.setAdministrator(true);
-        }else{
-            user.setAdministrator(false);
-        }
+        user.setAdministrator(this.userRepository.count() == 0);
+
         boolean isRegistered = this.userRepository.findFirstByEmail(userRegisterDTO.getEmail()).isPresent();
         if (isRegistered) {
             return "User with this email already exists.";
