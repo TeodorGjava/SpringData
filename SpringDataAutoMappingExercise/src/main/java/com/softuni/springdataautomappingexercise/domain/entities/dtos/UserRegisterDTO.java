@@ -15,38 +15,27 @@ public class UserRegisterDTO {
     //TODO: validate thru setters not void method
     public UserRegisterDTO(String email, String password, String confirmPassword, String fullName) {
         setEmail(email);
-        this.password = password;
-        this.confirmPassword = confirmPassword;
+        setPassword(password);
+        setConfirmPassword(confirmPassword);
         this.fullName = fullName;
-        validate();
-    }
-
-    private void validate() {
-
-        final boolean isPasswordValid = Pattern.matches(PASSWORD_PATTERN, this.password);
-
-        if (!isPasswordValid) {
-            System.out.println(INVALID_PASSWORD_MESSAGE);
-        }
-        if (!password.equals(confirmPassword)) {
-            System.out.println(PASSWORDS_DO_NOT_MATCH_MESSAGE);
-        }
 
     }
+
+
 
     public User toUser() {
         return new User(email, password, fullName);
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
         if (Pattern.matches(EMAIL_PATTERN, email)) {
             this.email = email;
         } else {
-            System.out.println(INVALID_EMAIL_MESSAGE);
+            throw new IllegalArgumentException(INVALID_EMAIL_MESSAGE);
         }
     }
 
@@ -55,19 +44,26 @@ public class UserRegisterDTO {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        if (Pattern.matches(PASSWORD_PATTERN, password)) {
+            this.password = password;
+        } else {
+            throw new IllegalArgumentException(INVALID_PASSWORD_OR_USERNAME_MESSAGE);
+        }
     }
 
     public String getConfirmPassword() {
-        return confirmPassword;
+        return this.confirmPassword;
     }
 
     public void setConfirmPassword(String confirmPassword) {
+        if (!confirmPassword.equals(this.password)) {
+            throw new IllegalArgumentException(PASSWORDS_DO_NOT_MATCH_MESSAGE);
+        }
         this.confirmPassword = confirmPassword;
     }
 
     public String getFullName() {
-        return fullName;
+        return this.fullName;
     }
 
     public void setFullName(String fullName) {

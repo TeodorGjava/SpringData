@@ -27,10 +27,12 @@ public class GameDTO {
     }
 
     public void setTitle(String title) {
-        if (title.length() >= 3 && title.length() <= 100 && Character.isUpperCase(title.charAt(0))) {
-            this.title = title;
+        if (Character.isLowerCase(title.charAt(0))
+                && title.length() >= 3
+                && title.length() <= 100) {
+            throw new IllegalArgumentException("Invalid game title");
         }
-        throw new IllegalArgumentException("Invalid game title");
+        this.title = title;
     }
 
     public String getTrailerId() {
@@ -38,11 +40,11 @@ public class GameDTO {
     }
 
     public void setTrailerId(String trailerId) {
-        boolean matches = trailerId.matches("^(https?://?www\\.youtube\\.com/watch\\?v=)[a-zA-Z]{11}");
-        if (matches) {
-            this.trailerId = trailerId;
+
+        if (trailerId.length() != 11) {
+            throw new IllegalArgumentException("Invalid trailerId");
         }
-        throw new IllegalArgumentException("Invalid trailerId");
+        this.trailerId = trailerId;
     }
 
     public String getImageURL() {
@@ -50,10 +52,11 @@ public class GameDTO {
     }
 
     public void setImageURL(String imageURL) {
-        if (imageURL.startsWith("http://") && imageURL.startsWith("https://")) {
+        if (imageURL.startsWith("http://") || imageURL.startsWith("https://")) {
             this.imageURL = imageURL;
+        } else {
+            throw new IllegalArgumentException("Image URL invalid");
         }
-        throw new IllegalArgumentException("Image URL invalid");
     }
 
     public BigDecimal getSize() {
@@ -62,9 +65,10 @@ public class GameDTO {
 
     public void setSize(BigDecimal size) {
         if (size.compareTo(new BigDecimal(0)) < 1) {
+            throw new IllegalArgumentException("Invalid game size");
+        } else {
             this.size = size;
         }
-        throw new IllegalArgumentException("Invalid game size");
     }
 
     public BigDecimal getPrice() {
@@ -73,9 +77,10 @@ public class GameDTO {
 
     public void setPrice(BigDecimal price) {
         if (price.compareTo(new BigDecimal(0)) < 1) {
+            throw new IllegalArgumentException("Invalid game price");
+        } else {
             this.price = price;
         }
-        throw new IllegalArgumentException("Invalid game price");
     }
 
     public String getDescription() {

@@ -13,6 +13,8 @@ public interface UserService {
 
     String logoutUser();
 
+    void setUserOnlineFindByEmail(String email);
+
 
 
 }

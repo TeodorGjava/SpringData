@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -24,42 +25,49 @@ public class GameServiceImpl implements GameService {
     @Override
     public String addGame(String[] data) {
 
-        String[] date = data[7].replace("-", " ").split(" ");
-        int year = Integer.parseInt(date[2]);
-        int month = Integer.parseInt(date[1]);
-        int day = Integer.parseInt(date[0]);
-        if (validate(data)) {
-            GameDTO game = new GameDTO(data[0], data[4],
-                    data[5], new BigDecimal(data[3]),
-                    new BigDecimal(data[2]), data[6],
-                    LocalDate.of(year, month, day));
-            this.gameRepository.save(game.toGame());
-            return "Added " + data[1];
-        }
-        return "Game parameters are not valid!";
+        String[] dateFormat = data[7].replace("-", " ").split(" ");
+        int year = Integer.parseInt(dateFormat[2]);
+        int month = Integer.parseInt(dateFormat[1]);
+        int day = Integer.parseInt(dateFormat[0]);
+        String title = data[1];
+        BigDecimal price = new BigDecimal(data[2]);
+        BigDecimal size = new BigDecimal(data[3]);
+        String trailerId = data[4];
+        String imageUrl = data[5];
+        String description = data[6];
+
+        GameDTO game = new GameDTO(title, trailerId, imageUrl, size, price, description,
+                LocalDate.of(year, month, day));
+        Game entity = game.toGame();
+        this.gameRepository.save(entity);
+        return "Added " + data[1];
     }
 
     @Override
-    public Game findById(int id) {
+    public Game findById(Long id) {
         return this.gameRepository.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public void editGameById(BigDecimal price, BigDecimal size, Long id) {
+        this.gameRepository.editGameById(price, size, id);
     }
 
     @Override
     public String editGame(String[] data) {
         Optional<Game> game = gameRepository.findById(Long.parseLong(data[1]));
         if (game.isPresent()) {
-            for (int i = 2; i < data.length; i++) {
-                String[] updateValues = data[i].split("=");
-                String field = updateValues[0];
-                String newValue = updateValues[1];
-                switch (field) {
-                    case "price" -> game.get().setPrice(new BigDecimal(newValue));
-                    case "title" -> game.get().setTitle(newValue);
-                    case "size" -> game.get().setSize(new BigDecimal(newValue));
-                    case "trailer" -> game.get().setTrailerId(newValue);
-                    case "description" -> game.get().setDescription(newValue);
-                }
-            }
+
+            String[] priceValue = data[2].split("=");
+            String[] sizeValue = data[3].split("=");
+
+            String price = priceValue[1];
+            String size = sizeValue[1];
+
+
+            this.gameRepository.editGameById(new BigDecimal(price),
+                    new BigDecimal(size),
+                    Long.parseLong(data[1]));
             return "Edited " + game.get().getTitle();
         } else {
             return "Invalid parameter to edit";
@@ -88,6 +96,11 @@ public class GameServiceImpl implements GameService {
         return this.gameRepository.findGameByTitle(title);
     }
 
+    @Override
+    public List<Game> findAll() {
+        return this.gameRepository.findAll();
+    }
+
     private boolean validate(String[] data) {
         String title = data[1];
         double price = Double.parseDouble(data[2]);
@@ -99,7 +112,7 @@ public class GameServiceImpl implements GameService {
         final boolean pricePositive = price > 0;
         final boolean sizePositive = size > 0;
         final boolean validTrailer = trailer.matches("^(https?://?www\\.youtube\\.com/watch\\?v=)[a-zA-Z]{11}");
-        final boolean thumbnailValid = thumbnailURL.startsWith("http://") && thumbnailURL.startsWith("https://");
+        final boolean thumbnailValid = thumbnailURL.startsWith("http://") || thumbnailURL.startsWith("https://");
         final boolean descriptionValid = description.length() > 20;
         return isTitleValid && pricePositive
                 && sizePositive && validTrailer && thumbnailValid

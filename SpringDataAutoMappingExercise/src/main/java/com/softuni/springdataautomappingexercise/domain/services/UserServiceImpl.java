@@ -9,8 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static com.softuni.springdataautomappingexercise.domain.constants.Validations.INVALID_PASSWORD_MESSAGE;
+import static com.softuni.springdataautomappingexercise.domain.constants.Validations.INVALID_PASSWORD_OR_USERNAME_MESSAGE;
 import static com.softuni.springdataautomappingexercise.domain.constants.Validations.NO_USER_LOGGED_IN_MESSAGE;
 import static java.lang.String.format;
 
@@ -36,7 +37,7 @@ public class UserServiceImpl implements UserService {
         UserRegisterDTO userRegisterDTO = new UserRegisterDTO(email, password, confirmPassword, fullName);
 
         User user = this.mapper.map(userRegisterDTO, User.class);
-
+        user.setOffline();
         user.setAdministrator(this.userRepository.count() == 0);
 
         boolean isRegistered = this.userRepository.findFirstByEmail(userRegisterDTO.getEmail()).isPresent();
@@ -64,10 +65,15 @@ public class UserServiceImpl implements UserService {
         boolean userExists = this.userRepository.existsUserByEmail(userLogin.getEmail());
         if (userExists) {
             this.user = this.userRepository.findByEmail(userLogin.getEmail()).get();
-            this.user.setOnline(true);
-            return user.successfulLogin();
+            if (this.user.getPassword().equals(password)) {
+                this.user.setOnline();
+                this.userRepository.setUserOnlineFindByEmail(email);
+                return user.successfulLogin();
+            } else {
+                return INVALID_PASSWORD_OR_USERNAME_MESSAGE;
+            }
         }
-        return INVALID_PASSWORD_MESSAGE;
+        return INVALID_PASSWORD_OR_USERNAME_MESSAGE;
     }
 
     @Override
@@ -78,10 +84,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public String logoutUser() {
         if (this.user.getOnline()) {
-            this.user.setOnline(false);
+            this.user.setOffline();
             return "User " + this.user.getFullName() + " logged out";
         }
         return NO_USER_LOGGED_IN_MESSAGE;
+    }
+
+    @Override
+    public void setUserOnlineFindByEmail(String email) {
+        this.userRepository.setUserOnlineFindByEmail(email);
     }
 
 
