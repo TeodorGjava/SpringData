@@ -15,6 +15,6 @@ import java.util.List;
 public class UserSoldProductsDTO {
     private String firstName;
     private String lastName;
-    private List<SoldProductDTO> soldProducts;
+    private List<SoldProductDTO> boughtProducts;
 
 }
