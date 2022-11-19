@@ -1,15 +1,16 @@
 package com.softuni.jsonexercises.domain.services;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public interface SeedService {
     void seedUsers() throws FileNotFoundException;
 
-    void seedCategories();
+    void seedCategories() throws IOException;
 
-    void seedProducts();
+    void seedProducts() throws IOException;
 
-    default void seedAll() throws FileNotFoundException {
+    default void seedAll() throws IOException {
         seedUsers();
         seedProducts();
         seedCategories();
