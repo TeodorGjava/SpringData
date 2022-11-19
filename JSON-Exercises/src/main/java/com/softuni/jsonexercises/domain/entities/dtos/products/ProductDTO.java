@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -35,4 +36,6 @@ public class ProductDTO {
     public ProductWithoutBuyerDTO productInRangeWithoutBuyerDTO() {
         return new ProductWithoutBuyerDTO(name, price, seller.getFullName());
     }
+
+
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 @Entity
 @Table(name = "products")
 public class Product extends BaseEntity {
-    @Column
+    @Column(nullable = false)
     private String name;
     @Column
     private BigDecimal price;

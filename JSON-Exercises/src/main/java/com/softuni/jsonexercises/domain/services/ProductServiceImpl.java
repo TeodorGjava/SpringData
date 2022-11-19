@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> MODEL_MAPPER.map(product, ProductDTO.class))
                 .map(ProductDTO::productInRangeWithoutBuyerDTO)
                 .toList();
-writeJsonIntoFile(productWithoutBuyerDTOS,JSON_PRODUCTS_WITHOUT_BUYERS_PATH);
+        writeJsonIntoFile(productWithoutBuyerDTOS, JSON_PRODUCTS_WITHOUT_BUYERS_PATH);
         return productWithoutBuyerDTOS;
     }
 }

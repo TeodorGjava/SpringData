@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query(value = "select * from `json`.users order by RAND() limit 1", nativeQuery = true)
     Optional<User> getRandomUser();
-  //  @Query(value = "select * from `json`.users u, products p" +
-   //         " where p.buyer_id is not null order by u.last_name,u.first_name", nativeQuery = true )
+
     Optional<List<User>> findAllBySellingProductsBuyerIsNotNullOrderBySellingProductsBuyerFirstName();
 }
