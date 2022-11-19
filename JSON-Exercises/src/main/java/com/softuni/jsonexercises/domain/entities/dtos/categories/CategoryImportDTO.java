@@ -1,4 +1,4 @@
-package com.softuni.jsonexercises.domain.entities.dtos;
+package com.softuni.jsonexercises.domain.entities.dtos.categories;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ImportUserDTO {
-    private String firstName;
-    private String lastName;
-    private Integer age;
+public class CategoryImportDTO {
+    private String name;
 }
