@@ -19,7 +19,7 @@ public class Customer extends BaseEntity {
     @Column
     private String name;
     @Column
-    private LocalDate birthDate;
+    private String birthDate;
     @Column(name = "is_young_driver")
     private Boolean isYoungDriver;
 
