@@ -1,19 +1,18 @@
-package com.softuni.cardealer.domain.services;
+package com.softuni.cardealer.domain.services.seed;
 
-import com.softuni.cardealer.domain.entities.Car;
-import com.softuni.cardealer.domain.entities.Part;
-import com.softuni.cardealer.domain.entities.Supplier;
+import com.softuni.cardealer.domain.entities.*;
 import com.softuni.cardealer.domain.entities.dtos.cars.ImportCarDTO;
+import com.softuni.cardealer.domain.entities.dtos.customers.ImportCustomerDTO;
 import com.softuni.cardealer.domain.entities.dtos.parts.ImportPartDTO;
+import com.softuni.cardealer.domain.entities.dtos.sales.ImportSaleDTO;
 import com.softuni.cardealer.domain.entities.dtos.suppliers.ImportSupplierDTO;
-import com.softuni.cardealer.domain.repositories.CarRepository;
-import com.softuni.cardealer.domain.repositories.PartRepository;
-import com.softuni.cardealer.domain.repositories.SupplierRepository;
+import com.softuni.cardealer.domain.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.softuni.cardealer.domain.constants.Paths.*;
@@ -25,12 +24,16 @@ public class SeedServiceImpl implements SeedService {
     private final PartRepository partRepository;
     private final CarRepository carRepository;
     private final SupplierRepository supplierRepository;
+    private final CustomerRepository customerRepository;
+    private final SalesRepository salesRepository;
 
     @Autowired
-    public SeedServiceImpl(PartRepository partRepository, CarRepository carRepository, SupplierRepository supplierRepository) {
+    public SeedServiceImpl(PartRepository partRepository, CarRepository carRepository, SupplierRepository supplierRepository, CustomerRepository customerRepository, SalesRepository salesRepository) {
         this.partRepository = partRepository;
         this.carRepository = carRepository;
         this.supplierRepository = supplierRepository;
+        this.customerRepository = customerRepository;
+        this.salesRepository = salesRepository;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class SeedServiceImpl implements SeedService {
         Random rnd = new Random();
         int randomNumberOfParts = rnd.nextInt(3, 5);
         Set<Part> randomParts = new HashSet<>();
-        for (int i = 0; i <=randomNumberOfParts; i++) {
+        for (int i = 0; i <= randomNumberOfParts; i++) {
             Part part = partRepository.getRandomPart();
             randomParts.add(part);
         }
@@ -89,7 +92,30 @@ public class SeedServiceImpl implements SeedService {
     }
 
     @Override
-    public void seedCustomers() {
+    public void seedCustomers() throws FileNotFoundException {
+        if (this.customerRepository.count() == 0) {
+            final FileReader fileReader = new FileReader(JSON_CUSTOMERS_PATH.toFile());
+            List<Customer> customers = Arrays.stream(GSON.fromJson(fileReader, ImportCustomerDTO[].class))
+                    .map(customerDTO -> MODEL_MAPPER.map(customerDTO, Customer.class)).toList();
+            this.customerRepository.saveAllAndFlush(customers);
+        }
+    }
 
+    @Override
+    public void seedSales() throws FileNotFoundException {
+            Set<Sale> sales = new HashSet<>();
+        if (this.salesRepository.count() == 0) {
+            for (int i = (int) this.customerRepository.count(); i > 0; i--) {
+                Car car = this.carRepository.getRandomCar();
+                Customer customer = this.customerRepository.getRandomCustomer();
+                Random rnd = new Random();
+                BigDecimal discount = new BigDecimal(rnd.nextInt(0, 5)+1);
+
+                ImportSaleDTO saleDTO = new ImportSaleDTO(car, customer, discount.multiply(new BigDecimal(10)));
+                Sale sale = MODEL_MAPPER.map(saleDTO, Sale.class);
+                sales.add(sale);
+            }
+            this.salesRepository.saveAllAndFlush(sales);
+        }
     }
 }
