@@ -3,32 +3,36 @@ package com.softuni.jsonexercises.domain.services;
 import com.softuni.jsonexercises.domain.entities.Category;
 import com.softuni.jsonexercises.domain.entities.Product;
 import com.softuni.jsonexercises.domain.entities.User;
-import com.softuni.jsonexercises.domain.entities.dtos.categories.CategoryImportDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.products.ProductImportDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.ImportUserDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.categories.CategoryImportDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.products.ProductImportDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.ImportUserDTO;
+import com.softuni.jsonexercises.domain.entities.xml.dtos.ImportUserXMLDTO;
+import com.softuni.jsonexercises.domain.entities.xml.dtos.UsersImportWrapperDTO;
 import com.softuni.jsonexercises.domain.repositories.CategoryRepository;
 import com.softuni.jsonexercises.domain.repositories.ProductRepository;
 import com.softuni.jsonexercises.domain.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.IntStream;
 
-import static com.softuni.jsonexercises.constants.Paths.*;
+import static com.softuni.jsonexercises.constants.JsonPaths.*;
 import static com.softuni.jsonexercises.constants.Utils.GSON;
 import static com.softuni.jsonexercises.constants.Utils.MODEL_MAPPER;
+import static com.softuni.jsonexercises.constants.XmlPaths.XML_USERS_PATH;
 
 @Service
 public class SeedServiceImpl implements SeedService {
-    private UserRepository userRepository;
-    private CategoryRepository categoryRepository;
-    private ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public SeedServiceImpl(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository) {
@@ -38,13 +42,24 @@ public class SeedServiceImpl implements SeedService {
     }
 
     @Override
-    public void seedUsers() throws FileNotFoundException {
+    public void seedUsers() throws IOException, JAXBException {
+
         if (this.userRepository.count() == 0) {
-            final FileReader fileReader = new FileReader(JSON_USERS_PATH.toFile());
-            List<User> users = Arrays.stream(GSON.fromJson(fileReader, ImportUserDTO[].class))
+            final FileReader fileReader = new FileReader(XML_USERS_PATH.toFile());
+           /*
+           *List<User> users = Arrays.stream(GSON.fromJson(fileReader, ImportUserDTO[].class))
                     .map(userDTo -> MODEL_MAPPER.map(userDTo, User.class)).toList();
-            this.userRepository.saveAllAndFlush(users);
+            this.userRepository.saveAllAndFlush(users); */
+            final JAXBContext context = JAXBContext.newInstance(UsersImportWrapperDTO.class);
+            final Unmarshaller unmarshaller = context.createUnmarshaller();
+
+            ImportUserXMLDTO importUsersDTO = (ImportUserXMLDTO) unmarshaller.unmarshal(fileReader);
+            importUsersDTO.get
+            fileReader.close();
         }
+
+        JAXBContext.newInstance(ImportUserDTO.class);
+
     }
 
     @Override

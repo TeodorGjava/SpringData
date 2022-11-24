@@ -1,9 +1,9 @@
 package com.softuni.jsonexercises.domain.services;
 
-import com.softuni.jsonexercises.domain.entities.dtos.users.UserDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.UserSoldProductsDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.UsersWithProductsDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.UsersWithProductsWrapperDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UserDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UserSoldProductsDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UsersWithProductsDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UsersWithProductsWrapperDTO;
 import com.softuni.jsonexercises.domain.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.softuni.jsonexercises.constants.Paths.JSON_SOLD_PRODUCTS_PATH;
-import static com.softuni.jsonexercises.constants.Paths.JSON_USERS_AND_PRODUCTS_PATH;
+import static com.softuni.jsonexercises.constants.JsonPaths.JSON_SOLD_PRODUCTS_PATH;
+import static com.softuni.jsonexercises.constants.JsonPaths.JSON_USERS_AND_PRODUCTS_PATH;
 import static com.softuni.jsonexercises.constants.Utils.MODEL_MAPPER;
 import static com.softuni.jsonexercises.constants.Utils.writeJsonIntoFile;
 

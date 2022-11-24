@@ -1,7 +1,7 @@
 package com.softuni.jsonexercises.domain.repositories;
 
 import com.softuni.jsonexercises.domain.entities.Category;
-import com.softuni.jsonexercises.domain.entities.dtos.categories.CategoryProductDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.categories.CategoryProductDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

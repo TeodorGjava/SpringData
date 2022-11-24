@@ -1,6 +1,6 @@
 package com.softuni.jsonexercises.domain.services;
 
-import com.softuni.jsonexercises.domain.entities.dtos.categories.CategoryProductDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.categories.CategoryProductDTO;
 import com.softuni.jsonexercises.domain.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.softuni.jsonexercises.constants.Paths.JSON_CATEGORIES_BY_PRODUCTS_PATH;
+import static com.softuni.jsonexercises.constants.JsonPaths.JSON_CATEGORIES_BY_PRODUCTS_PATH;
 import static com.softuni.jsonexercises.constants.Utils.writeJsonIntoFile;
 
 @Service

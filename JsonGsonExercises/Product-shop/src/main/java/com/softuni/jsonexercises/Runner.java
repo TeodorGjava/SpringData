@@ -1,6 +1,6 @@
 package com.softuni.jsonexercises;
 
-import com.softuni.jsonexercises.domain.entities.dtos.products.ProductWithoutBuyerDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.products.ProductWithoutBuyerDTO;
 import com.softuni.jsonexercises.domain.services.CategoryService;
 import com.softuni.jsonexercises.domain.services.ProductService;
 import com.softuni.jsonexercises.domain.services.SeedService;

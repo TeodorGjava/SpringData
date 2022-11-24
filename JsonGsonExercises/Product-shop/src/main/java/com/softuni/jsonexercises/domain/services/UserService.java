@@ -1,8 +1,7 @@
 package com.softuni.jsonexercises.domain.services;
 
-import com.softuni.jsonexercises.domain.entities.dtos.users.UserDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.UserSoldProductsDTO;
-import com.softuni.jsonexercises.domain.entities.dtos.users.UsersWithProductsWrapperDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UserSoldProductsDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.users.UsersWithProductsWrapperDTO;
 
 import java.io.IOException;
 import java.util.List;

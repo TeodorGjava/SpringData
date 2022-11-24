@@ -1,6 +1,6 @@
 package com.softuni.jsonexercises.domain.services;
 
-import com.softuni.jsonexercises.domain.entities.dtos.categories.CategoryProductDTO;
+import com.softuni.jsonexercises.domain.entities.json.dtos.categories.CategoryProductDTO;
 
 import java.io.IOException;
 import java.util.List;
