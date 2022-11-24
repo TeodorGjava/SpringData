@@ -11,21 +11,22 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.math.BigDecimal;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @XmlRootElement(name = "product")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SoldProductDTO {
+public class ProductWithBuyerFirstAndLastNameDto {
     @XmlElement
     private String name;
+
     @XmlElement
     private BigDecimal price;
-    @XmlElement
+
+    @XmlElement(name = "buyer-first-name")
     private String buyerFirstName;
-    @XmlElement
+
+    @XmlElement(name = "buyer-last-name")
     private String buyerLastName;
-
-
 }

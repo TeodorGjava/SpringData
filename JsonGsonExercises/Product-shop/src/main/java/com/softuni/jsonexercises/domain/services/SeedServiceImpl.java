@@ -54,7 +54,7 @@ public class SeedServiceImpl implements SeedService {
             final Unmarshaller unmarshaller = context.createUnmarshaller();
 
             ImportUserXMLDTO importUsersDTO = (ImportUserXMLDTO) unmarshaller.unmarshal(fileReader);
-            importUsersDTO.get
+            importUsersDTO.
             fileReader.close();
         }
 

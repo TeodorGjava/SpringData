@@ -26,9 +26,9 @@ import static com.softuni.jsonexercises.constants.Utils.MODEL_MAPPER;
 
 @Service
 public class SeedServiceImpl implements SeedService {
-    private UserRepository userRepository;
-    private CategoryRepository categoryRepository;
-    private ProductRepository productRepository;
+    private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public SeedServiceImpl(UserRepository userRepository, CategoryRepository categoryRepository, ProductRepository productRepository) {
@@ -76,8 +76,8 @@ public class SeedServiceImpl implements SeedService {
     private Product setRandomCategory(Product product) {
         Category category = this.categoryRepository.getRandomCategory().orElseThrow(NoSuchElementException::new);
         Random random = new Random();
-        Long highEnd = this.categoryRepository.count();
-        int numberOfCategories = random.nextInt(highEnd.intValue());
+        long highEnd = this.categoryRepository.count();
+        int numberOfCategories = random.nextInt((int) highEnd);
         Set<Category> categories = new HashSet<>();
 
         IntStream.rangeClosed(1, numberOfCategories)

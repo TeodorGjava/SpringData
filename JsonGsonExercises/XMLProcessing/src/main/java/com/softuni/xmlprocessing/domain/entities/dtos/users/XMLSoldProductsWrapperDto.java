@@ -1,5 +1,6 @@
 package com.softuni.xmlprocessing.domain.entities.dtos.users;
 
+import com.softuni.xmlprocessing.domain.entities.dtos.products.ProductWithBuyerNameDTOXML;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,17 +12,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UsersWithProductsWrapperDTO {
+@Getter
+@Setter
+@XmlRootElement(name = "sold-product")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class XMLSoldProductsWrapperDto {
 
-    private Integer usersCount;
-    private List<UsersWithProductsDTO> users;
-
-    public UsersWithProductsWrapperDTO(List<UsersWithProductsDTO> users) {
-        this.users = users;
-        this.usersCount = users.size();
-    }
+    @XmlElement(name = "product")
+    private List<ProductWithBuyerNameDTOXML> products;
 }

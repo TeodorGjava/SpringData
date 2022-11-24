@@ -1,24 +1,26 @@
 package com.softuni.xmlprocessing.domain.entities.dtos.users;
 
-import com.softuni.xmlprocessing.domain.entities.dtos.products.SoldProductDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.xml.bind.annotation.*;
-import java.util.List;
-
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class UserWithProductsDTO {
-    @XmlElementWrapper(name = "sold-products")
-    @XmlElement(name = "product")
-    private List<SoldProductDTO> soldProducts;
+public class UserSoldProductsDTOXML {
 
+        @XmlAttribute(name = "first-name")
+        private String firstName;
+
+        @XmlAttribute(name = "last-name")
+        private String lastName;
+
+        @XmlElement(name = "sold-product")
+        private XMLSoldProductsWrapperDto soldProducts;
 
 }

@@ -32,13 +32,9 @@ public class UserDTO {
         return firstName + " " + lastName;
     }
 
-    public UsersWithProductsWrapperDTO toUsersWithProductsWrapperDTO() {
-        return new UsersWithProductsWrapperDTO();
-    }
 
-    public UsersWithProductsDTO toUsersWithProductsDTO() {
-        return new UsersWithProductsDTO(firstName, lastName, age, toProductsSoldWithCountDTO());
-    }
+
+
 
     public ProductsSoldWithCountDTO toProductsSoldWithCountDTO() {
         return new ProductsSoldWithCountDTO(sellingProducts

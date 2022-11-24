@@ -2,7 +2,6 @@ package com.softuni.xmlprocessing;
 
 
 import com.softuni.xmlprocessing.domain.entities.dtos.products.ProductWithoutBuyerDTO;
-import com.softuni.xmlprocessing.domain.entities.dtos.users.UserWithProductsDTO;
 import com.softuni.xmlprocessing.domain.services.CategoryService;
 import com.softuni.xmlprocessing.domain.services.ProductService;
 import com.softuni.xmlprocessing.domain.services.SeedService;
@@ -37,12 +36,12 @@ public class Runner implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
         Scanner sc = new Scanner(System.in);
-     // addUsersToDatabase();
+     //addUsersToDatabase();
        //addCategoriesToDatabase();
-       // addProductsWithRandomSellerAndBuyerToDatabase();
+       //addProductsWithRandomSellerAndBuyerToDatabase();
        //getAllByPriceBetweenAndBuyerIsNullOrderByPrice(sc);
 
-        this.userService.usersSoldProducts();
+        this.userService.findAllByOrderByLastNameAscFirstName();
         // categoriesByProductsCount();
         //categoriesByProducts();
         //this.userService.usersAndProducts();
@@ -68,7 +67,5 @@ public class Runner implements CommandLineRunner {
         return this.productService.findAllByPriceBetweenAndBuyerIsNullOrderByPrice(sc.nextLine(), sc.nextLine());
     }
 
-    private void categoriesByProductsCount() throws IOException {
-        this.userService.findAllBySellingProductsBuyerIsNotNullOrderBySellingProductsBuyerFirstNameSellingProductsBuyerLastName();
-    }
+
 }

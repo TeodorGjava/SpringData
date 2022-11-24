@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.softuni.xmlprocessing.constants.Paths.XML_PRODUCTS_WITHOUT_BUYERS_PATH;
+import static com.softuni.xmlprocessing.constants.Paths.XML_PRODUCTS_IN_RANGE_PATH;
 import static com.softuni.xmlprocessing.constants.Utils.MODEL_MAPPER;
 
 
@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
         final JAXBContext context = JAXBContext.newInstance(ProductInPriceRangeWrapperDTO.class);
         final Marshaller marshaller = context.createMarshaller();
 
-        final File file = XML_PRODUCTS_WITHOUT_BUYERS_PATH.toFile();
+        final File file = XML_PRODUCTS_IN_RANGE_PATH.toFile();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT
                 , Boolean.TRUE);
         marshaller.marshal(productsWrapper, file);

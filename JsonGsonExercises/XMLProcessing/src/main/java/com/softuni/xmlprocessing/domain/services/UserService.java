@@ -9,9 +9,5 @@ import java.util.List;
 
 public interface UserService {
 
-    List<UserSoldProductsDTO> findAllBySellingProductsBuyerIsNotNullOrderBySellingProductsBuyerFirstNameSellingProductsBuyerLastName() throws IOException;
-
-    UsersWithProductsWrapperDTO usersAndProducts() throws IOException;
-
-    List<UserWithProductsDTO> usersSoldProducts() throws JAXBException;
+    List<UserWithSoldProductsDTO> findAllByOrderByLastNameAscFirstName() throws JAXBException;
 }
