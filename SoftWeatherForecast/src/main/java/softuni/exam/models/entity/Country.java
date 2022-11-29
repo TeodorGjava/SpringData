@@ -20,7 +20,7 @@ public class Country extends BaseEntity {
     @Size(min = 2, max = 60)
     @Column(nullable = false,unique = true)
     private String countryName;
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false)
     @Size(min = 2, max = 60)
     private String currency;
     @OneToMany
