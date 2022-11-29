@@ -13,4 +13,5 @@ public interface CityRepository extends JpaRepository<City, Long> {
 
     Optional<City> findFirstByCityName(String cityName);
 
+    Optional<City> findFirstById(Long id);
 }

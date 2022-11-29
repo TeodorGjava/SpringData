@@ -7,4 +7,6 @@ import softuni.exam.models.entity.Forecast;
 @Repository
 public interface ForecastRepository extends JpaRepository<Forecast,Long> {
 
+
+
 }
