@@ -9,6 +9,8 @@ import java.util.Optional;
 @Repository
 public interface CityRepository extends JpaRepository<City, Long> {
 
+
+
     Optional<City> findFirstByCityName(String cityName);
 
 }

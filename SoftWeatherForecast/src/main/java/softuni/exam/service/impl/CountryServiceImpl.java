@@ -58,7 +58,7 @@ public class CountryServiceImpl implements CountryService {
                         stringBuilder.append(String.format(SUCCESSFULLY_ADDED_COUNTRY, country.getCountryName(), country.getCurrency()));
                         this.countryRepository.saveAndFlush(this.modelMapper.map(country, Country.class));
                     } else {
-                        stringBuilder.append(INVALID_COUNTRY);
+                        stringBuilder.append(String.format(INVALID_COUNTRY));
                     }
                 });
 
