@@ -67,6 +67,7 @@ public class ForecastServiceImpl implements ForecastService {
                     final Forecast forecastToSave = this.modelMapper.map(forecast, Forecast.class);
                     forecastToSave.setCity(refCity);
                     this.forecastRepository.saveAndFlush(forecastToSave);
+                    //TODO::
                     output.append(SUCCESSFULLY_ADDED_FORECAST) //Successfully import forecast FRIDAY - 25.00
                 }
                 continue;
