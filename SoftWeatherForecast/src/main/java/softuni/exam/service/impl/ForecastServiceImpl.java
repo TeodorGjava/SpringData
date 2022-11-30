@@ -72,26 +72,31 @@ public class ForecastServiceImpl implements ForecastService {
 
                     final Forecast forecastToSave = this.modelMapper.map(forecast, Forecast.class);
                     //TODO::
-                    Optional<Forecast> firstByCityId = this.forecastRepository.findFirstByCityId(refCity.getId());
+                    Optional<Forecast> firstByCityId = this.forecastRepository
+                            .findFirstByCityId(refCity.getId());
                     if (firstByCityId.isPresent()) {
-                        List<Forecast> forecasts1 = firstByCityId.get().getCity().getForecasts().stream().filter(forecast1
-                                -> forecast1.getDayOfWeek() != forecastToSave.getDayOfWeek()).toList();
+                        List<Forecast> forecasts1 = firstByCityId.get().getCity().getForecasts().stream()
+                                .filter(forecast1
+                                        -> forecast1.getDayOfWeek() != forecastToSave.getDayOfWeek()).toList();
                         if (forecasts1.isEmpty()) {
                             output.append(String.format(INVALID_FORECAST));
                         } else {
                             forecastToSave.setCity(refCity);
-                            forecastToSave.setSunrise(LocalTime.parse(String.valueOf(forecast.getSunrise()),
-                                    DateTimeFormatter.ofPattern("HH:mm:ss")));
 
-                            forecastToSave.setSunset(LocalTime.parse(String.valueOf(forecast.getSunset()),
-                                    DateTimeFormatter.ofPattern("HH:mm:ss")));
 
                             this.forecastRepository.saveAndFlush(forecastToSave);
                             output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
                                     forecast.getDayOfWeek(), forecast.getMaxTemperature()));
                         }
 
+                    } else {
+                        forecastToSave.setCity(refCity);
+                        this.forecastRepository.saveAndFlush(forecastToSave);
+                        output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
+                                forecast.getDayOfWeek(), forecast.getMaxTemperature()));
                     }
+                } else {
+                    output.append(("Invalid city"));
                 }
             }
         }

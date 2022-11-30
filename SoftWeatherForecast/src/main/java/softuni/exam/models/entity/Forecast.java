@@ -7,6 +7,8 @@ import lombok.Setter;
 import softuni.exam.models.enums.DaysOfWeek;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 import java.time.LocalTime;
 
@@ -21,11 +23,13 @@ public class Forecast extends BaseEntity {
     @Column(nullable = false)
     private DaysOfWeek dayOfWeek;
 
-    @Size(min = -20, max = 60)
+    @DecimalMax(value = "60")
+    @DecimalMin(value = "-20")
     @Column(nullable = false)
     private Double maxTemperature;
 
-    @Size(min = -50, max = 40)
+    @DecimalMax(value = "40")
+    @DecimalMin(value = "-50")
     @Column(nullable = false)
     private Double minTemperature;
 

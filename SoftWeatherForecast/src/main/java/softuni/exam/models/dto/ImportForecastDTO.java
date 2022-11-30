@@ -26,6 +26,7 @@ import java.time.LocalTime;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ImportForecastDTO {
     @XmlElement(name = "day_of_week")
+    @NotNull
     private DaysOfWeek dayOfWeek;
     @DecimalMax(value = "60")
     @DecimalMin(value = "-20")
@@ -37,10 +38,10 @@ public class ImportForecastDTO {
     private Double minTemperature;
     @NotNull
     @XmlElement
-    private LocalTime sunrise;
+    private String sunrise;
     @NotNull
     @XmlElement
-    private LocalTime sunset;
+    private String sunset;
     @NotNull
     @XmlElement
     private Long city;
