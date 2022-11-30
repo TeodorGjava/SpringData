@@ -13,7 +13,7 @@ import java.io.FileReader;
 public class XmlParser {
 
     public <T> T fromFile(File filePath, Class<T> object) throws JAXBException, FileNotFoundException {
-        JAXBContext context = JAXBContext.newInstance();
+        JAXBContext context = JAXBContext.newInstance(object);
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
         FileReader fileReader = new FileReader(filePath);

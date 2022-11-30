@@ -18,6 +18,6 @@ import java.util.List;
 @XmlRootElement(name = "forecasts")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ImportForecastWrapper {
-    @XmlElement
+    @XmlElement(name = "forecast")
     private List<ImportForecastDTO> forecasts;
 }

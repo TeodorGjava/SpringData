@@ -72,23 +72,21 @@ public class ForecastServiceImpl implements ForecastService {
                     Optional<Forecast> firstByCityId = this.forecastRepository.findFirstByCityId(refCity.getId());
                     if (firstByCityId.isPresent()) {
                         List<Forecast> forecasts1 = firstByCityId.get().getCity().getForecasts().stream().filter(forecast1
-                                -> forecast1.getDayOfWeek() == forecastToSave.getDayOfWeek()).toList();
-                        if(forecasts1.isEmpty()){
+                                -> forecast1.getDayOfWeek() != forecastToSave.getDayOfWeek()).toList();
+                        if (forecasts1.isEmpty()) {
                             output.append(String.format(INVALID_FORECAST));
-                        }else{
-                    forecastToSave.setCity(refCity);
+                        } else {
+                            forecastToSave.setCity(refCity);
                             this.forecastRepository.saveAndFlush(forecastToSave);
-                    output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
-                            forecast.getDayOfWeek(), forecast.getMaxTemperature()));
+                            output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
+                                    forecast.getDayOfWeek(), forecast.getMaxTemperature()));
                         }
 
                     }
-                    //Successfully import forecast FRIDAY - 25.00
                 }
-                continue;
             }
         }
-        return null;
+        return output.toString();
     }
 
     @Override
