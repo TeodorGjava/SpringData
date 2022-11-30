@@ -9,4 +9,7 @@ public enum Messages {
     //CITIES
     public static final String SUCCESSFULLY_ADDED_CITY = "Successfully imported city %s - %s%n";
     public static final String INVALID_CITY = "Invalid city%n";
+    //FORECASTS
+    public static final String SUCCESSFULLY_ADDED_FORECAST = "Successfully import forecast %s - %.2f%n";
+    public static final String INVALID_FORECAST = "Invalid city%n";
 }

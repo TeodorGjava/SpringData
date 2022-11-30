@@ -18,7 +18,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
+import static softuni.exam.constants.Messages.INVALID_FORECAST;
+import static softuni.exam.constants.Messages.SUCCESSFULLY_ADDED_FORECAST;
 import static softuni.exam.constants.Paths.PATH_OF_FORECASTS_XML;
 
 @Service
@@ -65,10 +68,22 @@ public class ForecastServiceImpl implements ForecastService {
                     final City refCity = cityRepository.findFirstById(forecast.getCity()).get();
 
                     final Forecast forecastToSave = this.modelMapper.map(forecast, Forecast.class);
-                    forecastToSave.setCity(refCity);
-                    this.forecastRepository.saveAndFlush(forecastToSave);
                     //TODO::
-                    output.append(SUCCESSFULLY_ADDED_FORECAST) //Successfully import forecast FRIDAY - 25.00
+                    Optional<Forecast> firstByCityId = this.forecastRepository.findFirstByCityId(refCity.getId());
+                    if (firstByCityId.isPresent()) {
+                        List<Forecast> forecasts1 = firstByCityId.get().getCity().getForecasts().stream().filter(forecast1
+                                -> forecast1.getDayOfWeek() == forecastToSave.getDayOfWeek()).toList();
+                        if(forecasts1.isEmpty()){
+                            output.append(String.format(INVALID_FORECAST));
+                        }else{
+                    forecastToSave.setCity(refCity);
+                            this.forecastRepository.saveAndFlush(forecastToSave);
+                    output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
+                            forecast.getDayOfWeek(), forecast.getMaxTemperature()));
+                        }
+
+                    }
+                    //Successfully import forecast FRIDAY - 25.00
                 }
                 continue;
             }
