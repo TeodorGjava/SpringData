@@ -26,7 +26,7 @@ public class ApplicationBeanConfiguration {
                 .addConverter(mappingContext ->
                                 LocalTime.parse(mappingContext.getSource(),
                                         DateTimeFormatter.ofPattern("HH:mm:ss"))
-                        , String.class, LocalTime.class);
+                        ,String.class, LocalTime.class);
 
         return modelMapper;
     }

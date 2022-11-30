@@ -17,6 +17,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,6 +56,7 @@ public class ForecastServiceImpl implements ForecastService {
     @Override
     public String importForecasts() throws IOException, JAXBException {
         final StringBuilder output = new StringBuilder();
+
         final File file = Path.of(PATH_OF_FORECASTS_XML).toFile();
 
         final ImportForecastWrapper wrapper = parser.fromFile(file, ImportForecastWrapper.class);
@@ -77,6 +80,12 @@ public class ForecastServiceImpl implements ForecastService {
                             output.append(String.format(INVALID_FORECAST));
                         } else {
                             forecastToSave.setCity(refCity);
+                            forecastToSave.setSunrise(LocalTime.parse(String.valueOf(forecast.getSunrise()),
+                                    DateTimeFormatter.ofPattern("HH:mm:ss")));
+
+                            forecastToSave.setSunset(LocalTime.parse(String.valueOf(forecast.getSunset()),
+                                    DateTimeFormatter.ofPattern("HH:mm:ss")));
+
                             this.forecastRepository.saveAndFlush(forecastToSave);
                             output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
                                     forecast.getDayOfWeek(), forecast.getMaxTemperature()));
