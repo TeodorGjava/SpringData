@@ -29,4 +29,8 @@ public class City extends BaseEntity {
 
     @OneToMany
     private List<Forecast> forecasts;
+
+    public void addForecast(Forecast forecastToSave) {
+        this.forecasts.add(forecastToSave);
+    }
 }

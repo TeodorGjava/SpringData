@@ -11,5 +11,5 @@ public enum Messages {
     public static final String INVALID_CITY = "Invalid city%n";
     //FORECASTS
     public static final String SUCCESSFULLY_ADDED_FORECAST = "Successfully import forecast %s - %.2f%n";
-    public static final String INVALID_FORECAST = "Invalid city%n";
+    public static final String INVALID_FORECAST = "Invalid forecast%n";
 }

@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import softuni.exam.service.ForecastService;
 
+import java.util.stream.Stream;
+
 @Controller
 @RequestMapping("/export")
 public class ExportController extends BaseController {

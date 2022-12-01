@@ -6,6 +6,7 @@ import softuni.exam.models.dto.ImportForecastDTO;
 import softuni.exam.models.dto.ImportForecastWrapper;
 import softuni.exam.models.entity.City;
 import softuni.exam.models.entity.Forecast;
+import softuni.exam.models.enums.DaysOfWeek;
 import softuni.exam.repository.CityRepository;
 import softuni.exam.repository.ForecastRepository;
 import softuni.exam.service.ForecastService;
@@ -17,10 +18,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
+import java.time.DayOfWeek;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static softuni.exam.constants.Messages.INVALID_FORECAST;
 import static softuni.exam.constants.Messages.SUCCESSFULLY_ADDED_FORECAST;
@@ -71,33 +75,28 @@ public class ForecastServiceImpl implements ForecastService {
                     final City refCity = cityRepository.findFirstById(forecast.getCity()).get();
 
                     final Forecast forecastToSave = this.modelMapper.map(forecast, Forecast.class);
-                    //TODO::
-                    Optional<Forecast> firstByCityId = this.forecastRepository
-                            .findFirstByCityId(refCity.getId());
-                    if (firstByCityId.isPresent()) {
-                        List<Forecast> forecasts1 = firstByCityId.get().getCity().getForecasts().stream()
-                                .filter(forecast1
-                                        -> forecast1.getDayOfWeek() != forecastToSave.getDayOfWeek()).toList();
-                        if (forecasts1.isEmpty()) {
-                            output.append(String.format(INVALID_FORECAST));
-                        } else {
-                            forecastToSave.setCity(refCity);
 
-
-                            this.forecastRepository.saveAndFlush(forecastToSave);
-                            output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
-                                    forecast.getDayOfWeek(), forecast.getMaxTemperature()));
-                        }
-
+                    List<Forecast> forecasts1 = refCity.getForecasts().stream()
+                            .filter(forecast1
+                                    -> forecast1.getDayOfWeek() == forecastToSave.getDayOfWeek()
+                                    && forecast1.getCity().getId() == forecast.getCity()).toList();
+                    if (!forecasts1.isEmpty() && !refCity.getForecasts().isEmpty()) {
+                        output.append(String.format(INVALID_FORECAST));
                     } else {
                         forecastToSave.setCity(refCity);
+                        refCity.addForecast(forecastToSave);
+
                         this.forecastRepository.saveAndFlush(forecastToSave);
                         output.append(String.format(SUCCESSFULLY_ADDED_FORECAST,
                                 forecast.getDayOfWeek(), forecast.getMaxTemperature()));
                     }
+
                 } else {
                     output.append(("Invalid city"));
                 }
+
+            } else {
+                output.append(String.format(INVALID_FORECAST));
             }
         }
         return output.toString();
@@ -105,6 +104,20 @@ public class ForecastServiceImpl implements ForecastService {
 
     @Override
     public String exportForecasts() {
-        return null;
+        Set<Forecast> forecasts = forecastRepository.
+                findAllByDayOfWeekAndCity_PopulationLessThanOrderByMaxTemperatureDescIdAsc
+                        (DaysOfWeek.SATURDAY, 150000)
+                .orElseThrow(NoSuchElementException::new);
+
+
+        return forecasts.
+                stream()
+                .map(forecast -> String.format("City :%s%n" +
+                                "-minTemperature: %.2f%n" +
+                                "--maxTemperature: %.2f%n" +
+                                "---sunrise: %s%n" +
+                                "-----sunset: %s", forecast.getCity().getCityName(),
+                        forecast.getMinTemperature(), forecast.getMaxTemperature(),
+                        forecast.getSunrise(), forecast.getSunset())).collect(Collectors.joining(System.lineSeparator()));
     }
 }
